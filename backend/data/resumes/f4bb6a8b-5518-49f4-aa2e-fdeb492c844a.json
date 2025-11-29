@@ -1,0 +1,39 @@
+{
+  "id": "f4bb6a8b-5518-49f4-aa2e-fdeb492c844a",
+  "filename": "test_comprehensive_resume.txt",
+  "extracted_text": "Alex Rodriguez Full Stack Developer Email: alex.rodriguez@techmail.com Phone: (555) 987-6543 PROFESSIONAL SUMMARY: Experienced Full Stack Developer with 4 years in web development, specializing in modern JavaScript frameworks and cloud technologies. TECHNICAL SKILLS: \u2022 Frontend: React.js, Vue.js, TypeScript, HTML5, CSS3, Bootstrap \u2022 Backend: Node.js, Express.js, Python, Django, REST APIs \u2022 Databases: PostgreSQL, MongoDB, Redis \u2022 Cloud & DevOps: AWS, Docker, Kubernetes, Jenkins, CI/CD \u2022 Tools: Git, Webpack, Jest, Postman PROFESSIONAL EXPERIENCE: \u2022 Senior Developer at InnovTech Solutions (2021-2024) - 3 years \u2022 Junior Developer at StartUp Labs (2020-2021) - 1 year Total: 4 years of professional experience EDUCATION: \u2022 Master of Science in Computer Science, UC Berkeley (2020) \u2022 Bachelor of Technology in Software Engineering, UCLA (2018) KEY PROJECTS: \u2022 E-Commerce Platform: Built scalable React/Node.js platform with 50K+ users \u2022 Real-Time Chat Application: Developed WebSocket-based messaging system \u2022 Data Visualization Dashboard: Created analytics dashboard using D3.js and Python \u2022 Mobile Banking App: Implemented secure React Native application \u2022 Open Source Library: Contributed to popular JavaScript testing framework CERTIFICATIONS: \u2022 AWS Certified Developer Associate (2023) \u2022 Google Cloud Professional Developer (2022)",
+  "skills": [
+    "Python",
+    "Javascript",
+    "Js",
+    "React",
+    "Node.Js",
+    "Typescript",
+    "Vue",
+    "Docker",
+    "Kubernetes",
+    "Aws",
+    "Google Cloud",
+    "Postgresql",
+    "Mongodb",
+    "Redis",
+    "Git",
+    "Html5",
+    "Css3",
+    "Webpack",
+    "Jenkins",
+    "Ci/Cd"
+  ],
+  "experience_years": 4,
+  "education": [
+    "Bachelor",
+    "Master",
+    "BSc",
+    "Engineering",
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "alex.rodriguez@techmail.com",
+  "similarity_score": null,
+  "timestamp": "2025-11-28 17:23:10.716244"
+}

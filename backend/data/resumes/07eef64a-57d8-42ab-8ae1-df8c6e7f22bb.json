@@ -1,0 +1,34 @@
+{
+  "id": "07eef64a-57d8-42ab-8ae1-df8c6e7f22bb",
+  "filename": "Mohan_resume1 (6).pdf",
+  "extracted_text": "KurubaMohan manumohan8977@gmail.com SoftwareDevelopmentEngineer +91-8977274297 Bengaluru,Karnataka linkedin.com/in/kuruba-mohan PROFESSIONALSUMMARY \u2022 Designedscalable,high-performanceAI-drivenapplications,RESTfulAPIs,andfull-stacksolutions,de- livering25\u201340%improvementsinapplicationperformance. \u2022 ProficientinJava,Python,SQL,andReact.js,withhands-onexpertiseindistributedsystems,cloud-based microservicesarchitectures,anddatabaseoptimization. \u2022 SuccessfullyledAgileScrumteams,collaboratingwithcross-functionalteamstodeliverprojectsaheadof deadlinesandenhanceuserexperience. \u2022 Skilled in deploying Docker-based microservices and optimizing API performance for enterprise-grade cloudinfrastructures. EDUCATION Degree Specialization Institute Year CGPA B.E. ComputerScience&Engineering Sai Vidya Institute of 2021\u2013Present 8.63 Technology HSCBIEAP Physics,Chemistry,&Mathematics Sri Chaitanya Junior 2021 88.2% College SSC - ZPHSchool 2019 9.7 WORKEXPERIENCE \u2022 FullStackWebDevelopmentIntern [VarconsTechnologiesPvt. Ltd] May-Jun2023 \u25e6 Designedanddeployed5dynamicwebpagesusingReact.jsandNode.js,increasingoperationaleffi- ciencyby25%. \u25e6 ImplementedaPostgreSQLdatabaseschemaoptimizedfor10,000+records,reducingqueryresponse timesby30%. \u25e6 EnhancedUI/UXthroughCSSoptimizationandReactcomponents,reducingloadtimesby30%. \u25e6 Ledateamof4developersinaScrumframeworkusingJIRA,deliveringtheproject2weeksaheadof schedule. \u25e6 Deployed microservices on cloud infrastructure using Docker containers and Kubernetes, ensuring flawlessperformance. PROJECTS \u2022 KaryaNova: AI-PoweredEmploymentPlatform [Self-Initiated] Jan2024\u2013Present \u25e6 Built an AI-powered job recommendation system using Scikit-learn, improving placement rates by 20%. \u25e6 Designed a scalable backend using Node.js and Express.js, integrated with an interactive React.js frontend. \u25e6 ManagedstructuredandunstructureddataflowsusingPostgreSQLandMongoDBviaETLpipelines. \u25e6 ReducedAPIlatencyby40%throughcachingstrategiesandloadbalancingmechanisms. \u2022 SGPA/CGPAAutomationTool [Self-Initiated] Jan-Feb2023 \u25e6 Automated SGPA/CGPA calculations with Python and Flask, securely managing 1,000+ academic records. \u25e6 Increasedproductivityby20%withmodularUIandenhanceduseraccessibility. TECHNICALSKILLS \u2022 Languages: Java,Python,JavaScript,SQL,HTML,CSS \u2022 Frameworks: React.js,Node.js,Express.js,Flask \u2022 Databases: PostgreSQL,MongoDB \u2022 Tools: Docker,Git,JIRA,Postman,VSCode \u2022 Core Competencies: RESTful APIs, Scalable Web Development, AI/ML (TensorFlow, Scikit-learn), Dis- tributedSystems SOFTSKILLS \u2022 Exceptionalteamworkandcross-functionalcollaboration \u2022 Analyticalthinkingandcreativeproblem-solving \u2022 ProficientinAgileandScrummethodologies \u2022 Adaptableanddetail-oriented CERTIFICATIONS \u2022 JavaProgrammingCertification\u2013Qspiders(2022) \u2022 SQLCertification\u2013Qspiders(2022) \u2022 FullStackWebDevelopmentCertification\u2013Udemy(2023) ACHIEVEMENTS \u2022 Deliveredacloud-deployedproject2weeksaheadofscheduleduringinternshipatVarconsTechnologies. \u2022 Securedapositioninthetop15%ofclasswithan8.63CGPA. \u2022 Achieveda40%performanceimprovementinAPIresponsetimesthroughoptimization.",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Docker",
+    "Kubernetes",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Git",
+    "Html",
+    "Css",
+    "Api",
+    "Rest",
+    "Microservices",
+    "Ai",
+    "Tensorflow",
+    "Flask",
+    "Scala"
+  ],
+  "experience_years": null,
+  "education": [
+    "Engineering"
+  ],
+  "projects": [],
+  "email": "manumohan8977@gmail.com",
+  "similarity_score": 0.799288421869278,
+  "timestamp": "2025-11-28 16:51:12.109352"
+}

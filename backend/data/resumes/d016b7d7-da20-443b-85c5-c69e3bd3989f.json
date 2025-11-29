@@ -1,0 +1,12 @@
+{
+  "id": "d016b7d7-da20-443b-85c5-c69e3bd3989f",
+  "filename": "test_non_resume.txt",
+  "extracted_text": "AADHAAR CARD Government of India Name: Raj Sharma Email: raj.sharma@email.com Phone: 9876543210 Education: Graduate Skills: Communication, Hindi, English Work: Government Employee Experience: 10 years in administration Project: Digital India Initiative Address: New Delhi, India DOB: 15/08/1985",
+  "skills": [],
+  "experience_years": 10,
+  "education": [],
+  "projects": [],
+  "email": "raj.sharma@email.com",
+  "similarity_score": 0.6872458904981613,
+  "timestamp": "2025-11-28 17:11:53.707023"
+}

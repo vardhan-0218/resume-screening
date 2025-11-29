@@ -1,0 +1,30 @@
+{
+  "id": "1d2583e6-07b1-4862-826d-6d16671bedd8",
+  "filename": "vardhan-resume.pdf",
+  "extracted_text": "K V Vardhan (cid:131)+91-6360446970 #vardhankv05@gmail.com (cid:239)linkedin.com/in/k-v-vardhan \u00a7github.com/vardhan-0218 Summary Adaptableandgoal-drivenComputerSciencestudentwithstronginterpersonal,organizational,andproblem-solvingabilities. Education SaiVidyaInstituteofTechnology Bengaluru,India B.E.inComputerScience(AI&ML)\u2013CGPA:9.14(upto6thsem) 2022\u20132026 BGSPUCollege-Karnataka preuniversitycollege\u201380% 2022 BGSPublicSchool\u2013Karnataka SecondarySchoolCertificate\u201390.08% 2020 Projects Intelli-Eye: AnUnifiedDeepLearningPipelineforProactiveThreatIdentificationandAutomatedAlerts Ongoing Python,OpenCV,YOLOv8,React,Flask,AlertEngine \u2022 IntegratedYOLOv8formulti-threatdetectionwithreal-timeprocessingat25\u201330FPSacrosslivecamerastreams. \u2022 Bautomatedvideoingestionandanalysispipelineenablingframe-by-frameprocessing,threatscoring,andHTML-basedincidentreports. \u2022 Developed a Python-powered alert engine with job-status polling, incident logging (SQLite), and automated control-room notifications for high-riskevents. \u2022 Optimizedthesystemforedgedeployment,achievingsub-200mslatencyforreal-timeinferenceandalertresponse. \u2022 Engineeredalightweight,modular,andscalablearchitecturetailoredforsmart-citysurveillanceandmulti-cameraenvironments. CareerVoyage\u2013JobRecommendationPortal2 2024 MongoDB,Express.js,React.js,Node.js,TailwindCSS,JWT \u2022 Developedaskill-basedjobportalfor1,200+userswith5+filters,improvingmatchaccuracyby35%. \u2022 ImplementedJWT-basedaccesscontrolandCloudinaryintegrationfor100+uploads. \u2022 Built30+RESTAPIs,optimizedfrontendby25%usingReacthooks,andensuredmobileresponsiveness. \u2022 Increaseduserretentionby20%throughpersonalizedjobrecommendationsandUIimprovements. JARVISAIAssistant\u2013Voice-ControlledDesktopAssistant\u00a7 2023 Python,GoogleGeminiAI,SpeechRecognition,WebTechnologies \u2022 BuiltaPython-basedvoiceassistantwithspeechrecognition,GoogleGeminiAPIresponses,andautomatedsystem/Androidtaskexecution. \u2022 Developedafull-stackEel-basedapplicationwithamodernJSfrontend,real-timechat,voicecustomization,andSQLitecontactstorage. \u2022 Integratedadvancedfeaturesincludinghotworddetection,Androiddevicecontrol,andreal-timevoiceprocessingwith99%accuracy. Technical Skills \u2022 Languages: Python,Java,JavaScript,C \u2022 WebDevelopment: Node.js,Express.js,React.js,HTML,CSS,TailwindCSS \u2022 AI/ML:OpenCV,TensorFlow,PyTorch,Scikit-Learn,YOLOv8 \u2022 Databases: PostgreSQL,MySQL,MongoDB \u2022 Tools: Git,VSCode,Postman,PowerBI,Tableau Soft Skills \u2022 Strongcommunication&collaboration,Teamwork,leadership Certificates \u2022 AIFoundationsAssociate-Oracle(2025) \u2022 GenerativeAIForBeginners-SimpleLearn(2025) \u2022 GenerativeAILeaderTrack-GoogleCloud(2025) \u2022 PythonProgramming-SelfPaced-GeeksforGeeks(2025) \u2022 InstitutionBuildingforMachineLearningandDeepLearning\u2013Analogia(2023) \u2022 ExploratoryDataAnalysisforMachineLearning\u2013Certisured(2023) Achievements \u2022 AwardedPratt&WhitneyScholarshipforacademicexcellenceandinterviewperformance. \u2022 MagazineCoordinatorfortheacademicyear2024\u20132025atSVIT,responsibleforeditorialplanningandteamcoordination. \u2022 Activeparticipantincodingcompetitions,collegehackathons,andMLworkshops.",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Mysql",
+    "Git",
+    "Html",
+    "Css",
+    "Sass",
+    "Api",
+    "Rest",
+    "Ai",
+    "Tensorflow",
+    "Pytorch",
+    "Flask",
+    "Scala"
+  ],
+  "experience_years": null,
+  "education": [],
+  "similarity_score": null,
+  "timestamp": "2025-11-27 23:22:53.472390"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "51fc504d-b3e3-47c2-8e1e-0153f28b5c68",
+  "filename": "test_resume.txt",
+  "extracted_text": "John Doe Software Developer johndoe123@gmail.com Phone: +1-555-0123 PROFESSIONAL SUMMARY Experienced Full Stack Developer with 5+ years in web development. TECHNICAL SKILLS Programming Languages: Python, JavaScript, Java, TypeScript Web Technologies: React, Node.js, Express, HTML5, CSS3 Databases: MySQL, PostgreSQL, MongoDB EXPERIENCE Senior Software Developer - Tech Corp (2019-Present) Built scalable web applications using React and Node.js",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Typescript",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Mysql",
+    "Html",
+    "Css",
+    "Ai",
+    "Scala"
+  ],
+  "experience_years": 5,
+  "education": [],
+  "email": "johndoe123@gmail.com",
+  "similarity_score": null,
+  "timestamp": "2025-11-28 14:10:05.759583"
+}

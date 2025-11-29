@@ -1,0 +1,22 @@
+{
+  "id": "ca4f0bc1-8181-4c7d-8046-f31570eb6de2",
+  "filename": "JD for Epic Minds for Front End Developer.pdf",
+  "extracted_text": "Sri Sai Vidya Vikas Shikshana Samithi \u00ae SAI VIDYA INSTITUTE OF TECHNOLOGY (Approved by AICTE, New Delhi, Affiliated to VTU, Recognized by Govt. of Karnataka) NBA Accredited, New Delhi (CSE, ECE, ISE), NAAC \u2013 \u201cA\u201d Grade RAJANUKUNTE, BANGALORE 560 064, KARNATAKA DEPARTMENT OF TRAINING AND PLACEMENT Phone: 080-28468191/96/97/98 * E-mail: placement@saividya.ac.in * URL www.saividya.ac.in Ref No: SVIT/ CD - 23 / 2025-2026 Date: 14th November 2025 DEPARTMENT OF TRAINING AND PLACEMENT JOB DESCRIPTION This is to inform all students that M/s Epic Minds is conducting Placement Drive for the role of Front-End Developer \u2013 (Svelte / Svelte Kit) for all Branches of 2026 B.E Graduating Batch. Company Name M/s Epic Minds Role offered Front-End Developer \u2013 (Svelte / Svelte Kit) About the Role Create fast, accessible interfaces with Svelte and Svelte Kit. Build dynamic, theme able UIs where variable changes update the look & feel across the app. Morning Shift (IST). Roles and Responsibilities 1. Develop responsive UI with Svelte/SvelteKit (routing, SSR, endpoints). 2. Implement design tokens/CSS variables for on- the-fly theming (colors, spacing, typography, motion). 3. Integrate with backend APIs (REST/GraphQL) with robust error handling and caching. 4. Optimize performance (code-splitting, lazy loading, Core Web Vitals). 5. Uphold quality via TypeScript, unit/integration tests, and CI checks. Skills and Competency 1. Strong JavaScript/TypeScript and Svelte reactive patterns (stores, context). 2. CSS fundamentals, accessibility (WCAG), and responsive layouts. Sri Sai Vidya Vikas Shikshana Samithi \u00ae SAI VIDYA INSTITUTE OF TECHNOLOGY (Approved by AICTE, New Delhi, Affiliated to VTU, Recognized by Govt. of Karnataka) NBA Accredited, New Delhi (CSE, ECE, ISE), NAAC \u2013 \u201cA\u201d Grade RAJANUKUNTE, BANGALORE 560 064, KARNATAKA DEPARTMENT OF TRAINING AND PLACEMENT Phone: 080-28468191/96/97/98 * E-mail: placement@saividya.ac.in * URL www.saividya.ac.in 3. API integration patterns, auth flows, and routing guards. 4. Git workflows; testing with Vitest/Playwright/Jest. College Registration Link https://forms.gle/vCjdqzuivd29c7Dh8 Last Date to Apply 15-11-2025 by 12 PM Wishing you all the best Placement Officer SVIT",
+  "skills": [
+    "Javascript",
+    "Typescript",
+    "Git",
+    "Css",
+    "Api",
+    "Rest",
+    "Graphql"
+  ],
+  "experience_years": null,
+  "education": [
+    "MSc"
+  ],
+  "projects": [],
+  "email": "placement@saividya.ac.in",
+  "similarity_score": null,
+  "timestamp": "2025-11-28 17:09:02.931443"
+}

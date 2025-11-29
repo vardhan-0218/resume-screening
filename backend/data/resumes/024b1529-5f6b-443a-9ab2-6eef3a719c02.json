@@ -1,0 +1,29 @@
+{
+  "id": "024b1529-5f6b-443a-9ab2-6eef3a719c02",
+  "filename": "Mohan resume (2).docx",
+  "extracted_text": "Kuruba Mohan manumohan8977@gmail.com +91-8977274297 Bengaluru, Karnataka Professional Summary Software Engineer proficient in **Java, Python, SQL, React.js** with experience in full-stack development. Built dynamic web applications, optimized front-end performance, and managed databases. Developed **5+ interactive web pages** with React.js and Node.js, improving e\ufb03ciency by **25%**. Hands-on experience in **PostgreSQL database design**, backend development, and API integration. Education Sai Vidya Institute of Technology - B.E. in Computer Science 2021\u2013Present CGPA: 8.69 Sri Chaitanya Junior College - HSC (PCM) 2021 Percentage: 88.2% ZPH School - SSC 2019 GPA: 9.7 Work Experience Full Stack Web Development Intern - Varcons Technologies Pvt. Ltd May\u2013Jun 2024 Developed **5+ web pages** using React.js and Node.js, boosting e\ufb03ciency by **25%**. Designed a **PostgreSQL schema** for 10,000+ records, improving query speed by **30%**. Enhanced UI/UX with reusable components, reducing load time by **30%**. Led a team of 4 developers in a Scrum environment, delivering **2 weeks early**. Projects KaryaNova: AI-Powered Employment Platform Jul 2024 \u2013 Present Developed a scalable backend using **Node.js** and **Express.js**, integrated with a **React.js** frontend, boosting engagement by **25%**. Designed a **PostgreSQL database** managing **10,000+ job listings**, ensuring e\ufb03cient query execution. Implemented a **secure authentication system** using JWT, improving user security and access control. Built a **real-time job search and filtering** feature, improving user experience for **500+ active users**. Campus Connect: Telegram Chatbot Jan\u2013May 2024 Created a chatbot with **Python** and **PostgreSQL** to manage **1,000+ student profiles** and automate academic tasks. Integrated **Telegram Bot API** for seamless communication, enabling automated responses and reminders. Automated report generation using **ReportLab**, allowing students to export CGPA summaries as PDFs. Designed a **smart notification system** using **APScheduler**, boosting deadline adherence by **40%**. Technical Skills Languages: Java, Python, JavaScript, SQL, HTML, CSS Frameworks & Tools: React.js, Node.js, Express.js, Git Databases: PostgreSQL Other: API Integration, Frontend Optimization, Database Management Soft Skills Strong teamwork and collaboration Analytical and problem-solving abilities Adaptable and detail-oriented Certifications Full Stack Web Development - Udemy (2024) SQL Certification - Qspiders (2023) Java Programming Certification - Qspiders (2022) Declaration I hereby declare that the above information is true to the best of my knowledge and belief. Place: Bengaluru, Karnataka Date: February 18, 2025",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "Js",
+    "React",
+    "Node.Js",
+    "Sql",
+    "Postgresql",
+    "Git",
+    "Html",
+    "Css",
+    "Api",
+    "Ai",
+    "Express"
+  ],
+  "experience_years": null,
+  "education": [
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "manumohan8977@gmail.com",
+  "similarity_score": 0.8525075018405914,
+  "timestamp": "2025-11-29 19:52:38.475478"
+}

@@ -1,0 +1,31 @@
+{
+  "id": "9c139756-d035-4da1-8a5a-62c48ac6e5cb",
+  "filename": "Shravani_resume.pdf",
+  "extracted_text": "Shravani G B shravanigb580@gmail.com Gauribidanur, Chickballapur +91-8431510059 -561208 www.linkedin.com/in/shravani-gb https://github.com/Shravi-13 PROFESSIONAL SUMMARY \u2022 As a third-year Information Science and Engineering student at SJCIT College, Chickballapur, I have developed a robust foundation in key technical domains, like Software development methodologies, AI-driven solutions, and RESTful APIs. \u2022 Deep interest in advanced technological areas such as: Web development, Artificial intelligence, Data analytics hands experience working with, C, Java, Python, SQL, HTML, PowerBI, Tableau \u2022 Enthusiastic about collaborating with professional teams, contributing to innovative projects, and gaining insights into industry best practices to further enhance my technical expertise. PROJECTS \u2022 Development of chatbot using AI for mental health assistance. Jul 2024 \u25e6 Engineered a scalable backend using Python (Flask/Django), JavaScript (Node.js) paired with an interactive React.js, HTML/CSS, Tailwind CSS frontend. \u25e6 Designed and configured a PostgreSQL, Firebase, MongoDB database capable of handling Huge Data, maintaining high availability. EDUCATION Degree Specialization Institute Year CGPA B.E. Information science and Engineering SJC Institute of 2025\u2013Present 9.11 Technology HSC Physics, Chemistry, Mathematics B.G.S PU College 2022 82.67% & Biology SSC - Sri Ramakrishna 2020 83.2% Sharadadevi Vidya Mandira TECHNICAL SKILLS \u2022 Programming Languages: C,DSA,Java, Python, SQL, HTML, CSS \u2022 Frameworks and Tools: Git, PowerBI , tableau, AWS, VScode. \u2022 Databases: PostgreSQL, MongoDB \u2022 Specialized Competencies: RESTful APIs, Scalable Web Development, Distributed Systems. SOFT SKILLS \u2022 Exceptional teamwork and cross-functional collaboration \u2022 Analytical thinking and creative problem-solving \u2022 Proficient in Agile and Scrum methodologies \u2022 Adaptable and detail-oriented DECLARATION \u2022 I hereby declare that the above information is true to the best of my knowledge and belief.",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Aws",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Git",
+    "Html",
+    "Css",
+    "Api",
+    "Rest",
+    "Ai",
+    "Flask",
+    "Django",
+    "Scala"
+  ],
+  "experience_years": null,
+  "education": [
+    "Engineering"
+  ],
+  "email": "shravanigb580@gmail.com",
+  "similarity_score": 0.8424602448940277,
+  "timestamp": "2025-11-28 15:57:44.649114"
+}

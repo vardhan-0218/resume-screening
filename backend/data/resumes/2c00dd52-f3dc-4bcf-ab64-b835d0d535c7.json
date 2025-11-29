@@ -1,0 +1,24 @@
+{
+  "id": "2c00dd52-f3dc-4bcf-ab64-b835d0d535c7",
+  "filename": "test_resume_mike.txt",
+  "extracted_text": "Mike Chen Frontend Developer Email: mike.chen@gmail.com Experience: 3 years in web development SKILLS: React, Vue, JavaScript, HTML, CSS, Git EDUCATION: Bachelor in Computer Science PROJECTS: Website Redesign Project Mobile App Development E-commerce Dashboard API Integration Tool",
+  "skills": [
+    "Javascript",
+    "React",
+    "Vue",
+    "Git",
+    "Html",
+    "Css",
+    "Api"
+  ],
+  "experience_years": 3,
+  "education": [
+    "Bachelor",
+    "BSc",
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "mike.chen@gmail.com",
+  "similarity_score": 0.6530623584985733,
+  "timestamp": "2025-11-28 17:02:15.500371"
+}

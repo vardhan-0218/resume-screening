@@ -1,0 +1,23 @@
+{
+  "id": "60c90c87-056b-4ac6-bd9c-f1342c4097e5",
+  "filename": "test_junior_resume.txt",
+  "extracted_text": "Emma Wilson Junior Web Developer Email: emma.wilson@newdev.com Recent Computer Science graduate seeking entry-level position. SKILLS: HTML, CSS, JavaScript, Basic React, Git, MySQL EDUCATION: Bachelor of Science in Computer Science State University (2024) EXPERIENCE: Intern at Local Web Agency (Summer 2024) - 3 months Personal coding projects - 1 year PROJECTS: Personal Portfolio Website Calculator App Todo List Application",
+  "skills": [
+    "Javascript",
+    "React",
+    "Mysql",
+    "Git",
+    "Html",
+    "Css"
+  ],
+  "experience_years": null,
+  "education": [
+    "Bachelor",
+    "BSc",
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "emma.wilson@newdev.com",
+  "similarity_score": 0.7163452655076981,
+  "timestamp": "2025-11-28 17:07:12.797873"
+}

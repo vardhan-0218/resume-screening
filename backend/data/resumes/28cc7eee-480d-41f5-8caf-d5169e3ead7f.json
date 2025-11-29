@@ -1,0 +1,22 @@
+{
+  "id": "28cc7eee-480d-41f5-8caf-d5169e3ead7f",
+  "filename": "test_minimal_resume.txt",
+  "extracted_text": "Emma Wilson Junior Software Developer Email: emma.wilson@gmail.com Phone: (555) 123-4567 Professional Experience: Software Developer Intern at TechCorp (2023-2024) - 1 year Education: Bachelor of Science in Computer Science State University (2023) Technical Skills: - Python programming - HTML and CSS - Git version control Projects: Personal website using HTML/CSS/JavaScript I am seeking an entry-level software development position where I can apply my programming knowledge and continue learning.",
+  "skills": [
+    "Python",
+    "Javascript",
+    "Git",
+    "Html",
+    "Css"
+  ],
+  "experience_years": null,
+  "education": [
+    "Bachelor",
+    "BSc",
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "emma.wilson@gmail.com",
+  "similarity_score": null,
+  "timestamp": "2025-11-28 17:23:52.137015"
+}

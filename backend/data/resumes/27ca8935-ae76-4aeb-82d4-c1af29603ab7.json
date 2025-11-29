@@ -1,0 +1,39 @@
+{
+  "id": "27ca8935-ae76-4aeb-82d4-c1af29603ab7",
+  "filename": "test_resume_john.txt",
+  "extracted_text": "John Smith Software Engineer Email: john.smith@example.com Phone: (555) 123-4567 EXPERIENCE: - Senior Software Engineer at TechCorp (2020-2024) - 4 years - Software Developer at StartupInc (2018-2020) - 2 years Total: 6 years of experience SKILLS: - Programming: Python, JavaScript, TypeScript, Java - Frontend: React, Angular, HTML5, CSS3 - Backend: Node.js, Express, Django, Flask - Database: PostgreSQL, MongoDB, Redis - Cloud: AWS, Azure, Docker, Kubernetes - Tools: Git, Jenkins, CI/CD EDUCATION: - Master of Science in Computer Science, Stanford University (2018) - Bachelor of Technology in Software Engineering, MIT (2016) PROJECTS: - E-commerce Platform: Built scalable React/Node.js platform serving 100K+ users - ML Recommendation Engine: Developed Python-based recommendation system using TensorFlow - Mobile Banking App: Created secure banking application using React Native - Open Source Library: Contributing to popular JavaScript charting library on GitHub CERTIFICATIONS: - AWS Certified Solutions Architect - Google Cloud Professional Developer",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "Js",
+    "React",
+    "Node.Js",
+    "Typescript",
+    "Angular",
+    "Docker",
+    "Kubernetes",
+    "Aws",
+    "Azure",
+    "Google Cloud",
+    "Postgresql",
+    "Mongodb",
+    "Redis",
+    "Git",
+    "Github",
+    "Html5",
+    "Css3"
+  ],
+  "experience_years": 6,
+  "education": [
+    "Bachelor",
+    "Master",
+    "Engineering",
+    "Computer Science",
+    "Software Engineering"
+  ],
+  "projects": [],
+  "email": "john.smith@example.com",
+  "similarity_score": 0.84202641248703,
+  "timestamp": "2025-11-28 16:59:57.374506"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "7402d9bd-8893-431b-8e9f-33d8cfd499bb",
+  "filename": "test_data_scientist_resume.txt",
+  "extracted_text": "Dr. Maria Silva Senior Data Scientist Contact: maria.silva@datatech.io SUMMARY: PhD Data Scientist with 7 years of experience in machine learning and AI research. CORE COMPETENCIES: - Languages: Python, R, SQL, Scala, Julia - ML/AI: TensorFlow, PyTorch, Scikit-learn, XGBoost, Keras - Analytics: Pandas, NumPy, SciPy, Matplotlib, Seaborn, Plotly - Big Data: Apache Spark, Hadoop, Kafka, Elasticsearch - Cloud: Google Cloud Platform, AWS SageMaker, Azure ML - Databases: BigQuery, Snowflake, Cassandra, Neo4j CAREER HISTORY: - Principal Data Scientist, DataTech Corp (2020-Present) - 4 years - Senior ML Engineer, AI Innovations (2017-2020) - 3 years Total experience: 7 years in data science and machine learning ACADEMIC BACKGROUND: - PhD in Data Science and Machine Learning, MIT (2017) - MS in Applied Mathematics, Stanford University (2014) - BS in Statistics, UC Berkeley (2012) RESEARCH PROJECTS: - NLP Sentiment Analysis Engine: Deep learning model with 95% accuracy - Predictive Maintenance System: IoT-based ML pipeline for manufacturing - Computer Vision Platform: Real-time object detection using CNN - Fraud Detection Algorithm: Ensemble model preventing $2M+ losses annually - Recommendation Engine: Collaborative filtering system for 1M+ users",
+  "skills": [
+    "Python",
+    "Aws",
+    "Azure",
+    "Google Cloud",
+    "Sql",
+    "Machine Learning",
+    "Ml",
+    "Ai",
+    "Data Science",
+    "Tensorflow",
+    "Pytorch",
+    "Numpy",
+    "Pandas",
+    "Scala",
+    "Spark",
+    "Elasticsearch",
+    "Kafka"
+  ],
+  "experience_years": 7,
+  "education": [
+    "PhD",
+    "BSc",
+    "MSc"
+  ],
+  "projects": [],
+  "email": "maria.silva@datatech.io",
+  "similarity_score": 0.8650747835636139,
+  "timestamp": "2025-11-28 17:06:54.026579"
+}

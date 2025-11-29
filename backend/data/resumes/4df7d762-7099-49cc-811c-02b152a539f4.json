@@ -1,0 +1,33 @@
+{
+  "id": "4df7d762-7099-49cc-811c-02b152a539f4",
+  "filename": "rakesh_resume.docx",
+  "extracted_text": "Rakesh B K Bengaluru,Karnataka +91-8217067493 rraki8657@gmail.com EDUCATION JSS Academy of Technical Education, Bengaluru 12 2023 \u2013 Present B.E. in Information Science and Engineering - CGPA \u2013 8.1 Bengaluru , India S J (Govt)Polytechnic,K.R Circle 12 2020 \u2013 07 2023 Diploma in Mechatronics - CGPA - 7.8 , IndiaBengaluru , India B G S Public School Gauribidanur, India NCERT State Board \u2013 Percentage: 89.89% 2010 \u2013 2020 Technical Skills Languages: Java, Python (Basics), C, JavaScript Web Development: HTML, CSS, React.js, Node.js, Express.js. Databases: MySQL, MongoDB Tools/Platforms: Git, GitHub, VS Code, IntelliJ IDEA, Power BI, Tableau, LateX, Arduino Concepts: Data Structures and Algorithms, OOPs, CN, OS ,Artificial intelligence, Machine Learning, IoT PROJECTS AI-Based Sign Language Detection System April 2024 \u2013 June 2024 A machine learning-powered application that interprets sign language gestures to bridge communication gaps. Developed a sign language recognition system using Python, OpenCV, and TensorFlow for real-time gesture detection and classification via webcam. Trained a CNN model on datasets like ASL Alphabet and Sign Language MNIST to achieve high classification accuracy. AUTOMATED ANDROID MALWARE DETECTION Feb 2025 - present About project Analyze APK files using static features (like permissions, intents, activities, and API calls). \u2022 Evaluate and compare the performance of multiple algorithms: Random Forest (RF), Extra Trees (ET), Artificial Neural Networks (ANN), and Convolutional Neural Networks (CNN). \u2022 Combine these models using ensemble learning techniques to create a robust hybrid system that benefits from the strengths of individual classifiers.. INTERNSHIP Schneider Electric Certificate Feb 2023 \u2013 Jun 2023 Assembly Technician Bengaluru, India \u2217 Wired and assembled products while adhering to safety and quality standards. \u2217 Assembled electrical components, followed wiring diagrams and mechanical drawings, ensured quality and output, maintained a clean work area, and helped train other operators. TECHNICAL SKILLS Languages: Python, Java, C, C++, JavaScript, SQL, NoSQL, Developer Tools: VS Code, Android Studio, DataGrip, Intellij Idea Ultimate Technologies/Frameworks: Linux, GitHub, ReactJS, Redux, NextJS, NodeJS, ExpressJS, Git, Mongo CERTIFICATIONS Career Essentials in Generative AI & Redux - Microsoft and LinkedIn Career Essentials in Cybersecurity - Microsoft and LinkedIn Basics of Python - Infosys Springboard Fundamentals of Information Security complete- Infosys Springboard Data Structures- Infosys Springboard Internet of Things 101- Infosys Springboard IoT EDge Computing and IoT Analytics - Infosys Springboard",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Nodejs",
+    "Sql",
+    "Mongodb",
+    "Mysql",
+    "Git",
+    "Linux",
+    "Html",
+    "Css",
+    "Api",
+    "Rest",
+    "Machine Learning",
+    "Ai",
+    "Tensorflow",
+    "Spring"
+  ],
+  "experience_years": null,
+  "education": [
+    "Engineering"
+  ],
+  "projects": [],
+  "email": "rraki8657@gmail.com",
+  "similarity_score": 0.8736012876033783,
+  "timestamp": "2025-11-28 16:50:26.052974"
+}

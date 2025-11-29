@@ -1,0 +1,6 @@
+John Doe - Software Engineer
+Email: john.doe@example.com
+Experience: 3 years in web development
+Skills: React, JavaScript, TypeScript, HTML, CSS, Node.js
+Education: Bachelor's in Computer Science
+Projects: E-commerce website, Task management app

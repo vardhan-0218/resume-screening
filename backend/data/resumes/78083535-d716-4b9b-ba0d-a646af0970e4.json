@@ -1,0 +1,32 @@
+{
+  "id": "78083535-d716-4b9b-ba0d-a646af0970e4",
+  "filename": "test_resume_sarah.txt",
+  "extracted_text": "Sarah Johnson Data Scientist Contact: sarah.j@email.com SUMMARY: Experienced Data Scientist with 5 years in machine learning and analytics. EXPERIENCE: \u2022 Lead Data Scientist at DataTech Corp (2019-2024) - 5 years \u2022 Junior Analyst at Analytics Inc (2018-2019) - 1 year TECHNICAL SKILLS: - Languages: Python, R, SQL, Scala - ML/AI: TensorFlow, PyTorch, Scikit-learn, Keras - Data: Pandas, NumPy, Matplotlib, Seaborn - Big Data: Spark, Hadoop, Kafka - Cloud: GCP, AWS S3, BigQuery - Databases: MySQL, Cassandra, Neo4j EDUCATION: PhD in Data Science from UC Berkeley (2018) MS in Statistics from Stanford University (2016) PROJECTS: \u2022 Predictive Analytics Platform: Built end-to-end ML pipeline processing 1M+ records daily \u2022 Customer Segmentation Model: Developed clustering algorithm improving targeting by 40% \u2022 NLP Sentiment Analysis: Created real-time sentiment analysis system using deep learning \u2022 Recommendation System: Implemented collaborative filtering for e-commerce platform",
+  "skills": [
+    "Python",
+    "Aws",
+    "Gcp",
+    "Sql",
+    "Mysql",
+    "Machine Learning",
+    "Ml",
+    "Ai",
+    "Data Science",
+    "Tensorflow",
+    "Pytorch",
+    "Numpy",
+    "Pandas",
+    "Scala",
+    "Spark",
+    "Kafka"
+  ],
+  "experience_years": null,
+  "education": [
+    "PhD",
+    "MSc"
+  ],
+  "projects": [],
+  "email": "sarah.j@email.com",
+  "similarity_score": 0.8583981692790985,
+  "timestamp": "2025-11-28 17:00:52.639981"
+}
