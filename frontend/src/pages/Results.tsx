@@ -11,133 +11,29 @@ import jsPDF from "jspdf";
 export default function Results() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [updateKey, setUpdateKey] = useState<number>(0);
   
-  // Force re-render state with cache busting
-  const [renderKey, setRenderKey] = useState<string>("");
-  const [componentResetKey, setComponentResetKey] = useState<number>(0);
-  const [forceUpdate, setForceUpdate] = useState<number>(0);
-  const [lastScore, setLastScore] = useState<number | null>(null);
+  // Get ATS results from navigation state  
+  const resultData = location.state;
   
-  // Get real-time ATS results from navigation state with backup recovery
-  let resultData = location.state;
-  
-  // Backup recovery mechanism if navigation state is lost
-  if (!resultData) {
-    console.log("🔄 ATTEMPTING BACKUP RECOVERY - Navigation state lost");
-    const backupData = sessionStorage.getItem('atsResultBackup');
-    if (backupData) {
-      try {
-        const parsed = JSON.parse(backupData);
-        const ageMinutes = (Date.now() - parsed.preservedAt) / (1000 * 60);
-        if (ageMinutes < 5) { // Only use backup if less than 5 minutes old
-          console.log("✅ BACKUP RECOVERY SUCCESSFUL - Using preserved data");
-          resultData = parsed;
-        } else {
-          console.log("⏰ BACKUP TOO OLD - Clearing stale data");
-          sessionStorage.removeItem('atsResultBackup');
-        }
-      } catch (error) {
-        console.log("❌ BACKUP RECOVERY FAILED - Invalid stored data");
-        sessionStorage.removeItem('atsResultBackup');
-      }
-    }
-  }
-  
-  // Force complete page refresh if same data detected
+  // Simple validation and setup
   useEffect(() => {
-    if (!resultData) return;
-    
-    const lastData = sessionStorage.getItem('lastAtsResult');
-    const currentData = JSON.stringify(resultData?.atsResult);
-    
-    if (lastData === currentData && resultData?.uploadId && lastData !== 'null') {
-      console.log("🔄 FORCING PAGE REFRESH - Same data detected");
-      sessionStorage.removeItem('lastAtsResult');
-      window.location.reload();
-      return;
-    }
-    
-    sessionStorage.setItem('lastAtsResult', currentData);
-  }, [resultData]);
-  
-  // Monitor score changes and force refresh if needed
-  useEffect(() => {
-    if (resultData?.atsResult?.ats_score && lastScore !== null) {
-      if (lastScore === resultData.atsResult.ats_score && resultData.uploadId) {
-        console.log("🚨 SAME SCORE DETECTED - Different upload but same score!");
-        console.log("🔄 FORCING IMMEDIATE PAGE REFRESH");
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      }
-    }
-    
-    if (resultData?.atsResult?.ats_score) {
-      setLastScore(resultData.atsResult.ats_score);
-    }
-  }, [resultData?.atsResult?.ats_score, resultData?.uploadId, lastScore]);
-  
-  // STRICT validation with detailed logging
-  useEffect(() => {
-    console.log("🔍 RESULTS PAGE DEBUG:");
-    console.log("1. Navigation location.state:", location.state);
-    console.log("2. ResultData exists:", !!resultData);
-    console.log("3. AtsResult exists:", !!resultData?.atsResult);
-    console.log("4. ATS Score value:", resultData?.atsResult?.ats_score);
-    console.log("5. ATS Score type:", typeof resultData?.atsResult?.ats_score);
-    console.log("6. ATS Status:", resultData?.atsResult?.status);
-    console.log("7. Upload ID:", resultData?.uploadId);
-    console.log("8. Timestamp:", resultData?.timestamp ? new Date(resultData.timestamp).toISOString() : 'No timestamp');
-    console.log("9. Full ATS Result:", JSON.stringify(resultData?.atsResult, null, 2));
-    console.log("10. Current URL:", window.location.href);
-    console.log("11. Location pathname:", location.pathname);
-    console.log("12. Full location object:", location);
-    
     if (!resultData || !resultData.atsResult || typeof resultData.atsResult.ats_score !== 'number') {
-      console.log("❌ REDIRECTING - Invalid data detected");
-      console.log("📍 Possible causes:");
-      console.log("   - Direct access to /results URL");
-      console.log("   - Browser refresh on results page");
-      console.log("   - Navigation state lost");
-      console.log("   - API call failed during analysis");
-      
-      toast.error("No valid ATS results found. Please analyze a resume first.");
-      
-      // Add small delay to ensure toast shows before navigation
-      setTimeout(() => {
-        navigate("/", { replace: true });
-      }, 500);
+      console.log("❌ No valid ATS data found, redirecting to home");
+      toast.error("Please upload a resume first to see results.");
+      navigate("/", { replace: true });
       return;
     }
     
-    console.log("✅ VALID DATA - Proceeding with display");
-    console.log("📊 UNIQUE UPLOAD CONFIRMED - Upload ID:", resultData.uploadId);
-    console.log("🔥 FORCING COMPLETE COMPONENT RESET");
+    console.log("✅ Valid ATS data received:", {
+      score: resultData.atsResult.ats_score,
+      status: resultData.atsResult.status,
+      uploadId: resultData.uploadId
+    });
     
-    // Force complete component reset
-    setComponentResetKey(prev => prev + 1);
-    setRenderKey(`render-${resultData.uploadId}-${resultData.timestamp}-${Date.now()}`);
-    
-    // Complete browser cache clearing
-    if (window.performance && window.performance.navigation) {
-      console.log("🧹 Browser navigation type:", window.performance.navigation.type);
-    }
-    
-    // Preserve navigation state in sessionStorage as backup
-    sessionStorage.setItem('atsResultBackup', JSON.stringify({
-      ...resultData,
-      preservedAt: Date.now()
-    }));
-    
-    // Force browser history clear
-    if (typeof window !== 'undefined' && window.history?.replaceState) {
-      const newState = {
-        ...resultData,
-        clearCache: Date.now()
-      };
-      window.history.replaceState(newState, '', window.location.href);
-    }
-  }, [resultData, navigate, location]);
+    // Trigger component update
+    setUpdateKey(Date.now());
+  }, [resultData, navigate]);
   
   // Block rendering if no valid ATS data - show helpful message instead of redirect
   if (!resultData || !resultData.atsResult || typeof resultData.atsResult.ats_score !== 'number') {
@@ -235,23 +131,9 @@ export default function Results() {
     pdf.text(`Skill Match Level: ${skillMatchLevel}`, margin, yPosition);
     yPosition += 20;
 
-    // Status Section
-    pdf.setFontSize(16);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Application Status", margin, yPosition);
-    yPosition += 10;
-
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "normal");
-    const statusColor: [number, number, number] = realStatus ? [34, 197, 94] : [239, 68, 68];
-    pdf.setTextColor(statusColor[0], statusColor[1], statusColor[2]);
-    pdf.text(realStatus ? "✓ Shortlisted" : "✗ Not Shortlisted", margin, yPosition);
-    pdf.setTextColor(0, 0, 0); // Reset to black
-    yPosition += 20;
-
-    // Matched Skills Section
-    if (realMatchedSkills && realMatchedSkills.length > 0) {
-      pdf.setFontSize(16);
+    // Skills sections
+    if (realMatchedSkills.length > 0) {
+      pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
       pdf.text("Matched Skills", margin, yPosition);
       yPosition += 10;
@@ -259,30 +141,42 @@ export default function Results() {
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "normal");
       realMatchedSkills.forEach((skill: string) => {
+        if (yPosition > 250) {
+          pdf.addPage();
+          yPosition = 30;
+        }
         pdf.text(`• ${skill}`, margin, yPosition);
         yPosition += 8;
       });
       yPosition += 10;
     }
 
-    // Missing Skills Section
-    if (realMissingSkills && realMissingSkills.length > 0) {
-      pdf.setFontSize(16);
+    if (realMissingSkills.length > 0) {
+      if (yPosition > 200) {
+        pdf.addPage();
+        yPosition = 30;
+      }
+
+      pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
-      pdf.text("Missing Skills", margin, yPosition);
+      pdf.text("Skills to Develop", margin, yPosition);
       yPosition += 10;
 
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "normal");
       realMissingSkills.forEach((skill: string) => {
+        if (yPosition > 250) {
+          pdf.addPage();
+          yPosition = 30;
+        }
         pdf.text(`• ${skill}`, margin, yPosition);
         yPosition += 8;
       });
-      yPosition += 10;
+      yPosition += 20;
     }
 
-    // Suggestions Section
-    if (realSuggestions && realSuggestions.length > 0) {
+    // Recommendations
+    if (realSuggestions.length > 0) {
       // Check if we need a new page
       if (yPosition > 250) {
         pdf.addPage();
@@ -316,73 +210,36 @@ export default function Results() {
       });
     }
 
-    // Footer
-    const totalPages = pdf.internal.pages.length - 1; // Subtract 1 because of the empty first element
-    for (let i = 1; i <= totalPages; i++) {
-      pdf.setPage(i);
-      pdf.setFontSize(10);
-      pdf.setFont("helvetica", "italic");
-      pdf.text(
-        `Generated by AI Resume Scout - Page ${i} of ${totalPages}`,
-        margin,
-        pdf.internal.pageSize.getHeight() - 10
-      );
-    }
-
-    // Download the PDF
-    const fileName = realStatus 
-      ? `Resume_Screening_Report_${new Date().toISOString().split('T')[0]}.pdf`
-      : `Resume_Improvement_Report_${new Date().toISOString().split('T')[0]}.pdf`;
-    
-    pdf.save(fileName);
+    pdf.save("ats-analysis-report.pdf");
     toast.success("Report downloaded successfully!");
   };
 
-  const handleBackToApp = () => {
-    navigate("/app");
-  };
-
-  const handleBackToHome = () => {
-    navigate("/");
-  };
-
-  const handleNewScreening = () => {
-    navigate("/app", { replace: true });
-    toast.success("Ready for new resume screening!");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5" key={renderKey || `results-root-${resultData?.uploadId}`}>
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden" key={`page-${updateKey}`}>
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-card/80 backdrop-blur-lg border-b border-border sticky top-0 z-10 shadow-soft">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <header className="relative z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
+                <Brain className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">ATS Analysis Results</h1>
+                <p className="text-muted-foreground">Professional resume evaluation complete</p>
+              </div>
+            </div>
             <Button
-              variant="ghost"
-              onClick={handleBackToApp}
-              className="gap-2 hover:bg-primary/10"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Upload
-            </Button>
-            <div className="w-px h-6 bg-border mx-2" />
-            <Button
-              variant="ghost"
-              onClick={handleBackToHome}
-              className="gap-2 hover:bg-primary/10"
-            >
-              <Home className="w-4 h-4" />
-              Home
-            </Button>
-          </div>
-          <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            {atsResult ? 'ATS Evaluation Results' : 'Screening Results'}
-          </h1>
-          <div className="flex items-center gap-2">
-            <Button
+              onClick={handleBackToAnalysis}
               variant="outline"
-              onClick={handleNewScreening}
-              className="gap-2 hover:bg-primary/10"
+              className="gap-2 hover:bg-primary/10 border-primary/20"
             >
               <RotateCcw className="w-4 h-4" />
               New Screening
@@ -391,34 +248,34 @@ export default function Results() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-12 space-y-8" key={`results-${resultData.uploadId}`}>
+      <main className="container mx-auto px-6 py-12 space-y-8" key={`results-${updateKey}`}>
         {/* Status Section */}
-        <section className="text-center space-y-6 animate-fade-in" key={`status-${resultData.uploadId}`}>
-          <StatusBadge isShortlisted={realStatus} key={`badge-${resultData.uploadId}`} />
-          <div className="flex justify-center" key={`gauge-container-${componentResetKey}`}>
+        <section className="text-center space-y-6 animate-fade-in" key={`status-${updateKey}`}>
+          <StatusBadge isShortlisted={realStatus} key={`badge-${updateKey}`} />
+          <div className="flex justify-center" key={`gauge-container-${updateKey}`}>
             <ScoreGauge 
               score={Math.round(realScore)} 
-              key={`gauge-${resultData.uploadId}-${realScore}-${componentResetKey}-${Date.now()}`} 
+              key={`gauge-${realScore}-${updateKey}`} 
             />
           </div>
           <div className="flex items-center justify-center gap-4 text-sm">
-            <div className="px-6 py-3 bg-card rounded-xl border border-border shadow-soft" key={`level-${resultData.uploadId}-${componentResetKey}-${skillMatchLevel}`}>
+            <div className="px-6 py-3 bg-card rounded-xl border border-border shadow-soft" key={`level-${updateKey}-${skillMatchLevel}`}>
               <span className="text-muted-foreground">Skill Match Level: </span>
-              <span className="font-bold text-foreground" key={`level-text-${skillMatchLevel}-${componentResetKey}`}>{skillMatchLevel}</span>
+              <span className="font-bold text-foreground" key={`level-text-${skillMatchLevel}-${updateKey}`}>{skillMatchLevel}</span>
             </div>
           </div>
         </section>
 
         {/* Skills Analysis */}
-        <section className="grid md:grid-cols-2 gap-6" key={`skills-${resultData.uploadId}`}>
+        <section className="grid md:grid-cols-2 gap-6" key={`skills-${updateKey}`}>
           <SkillCard
-            key={`matched-${resultData.uploadId}-${realMatchedSkills.join(',')}-${componentResetKey}`}
+            key={`matched-${realMatchedSkills.join(',')}-${updateKey}`}
             title="Matched Skills"
             skills={realMatchedSkills}
             isMatched={true}
           />
           <SkillCard
-            key={`missing-${resultData.uploadId}-${realMissingSkills.join(',')}-${componentResetKey}`}
+            key={`missing-${realMissingSkills.join(',')}-${updateKey}`}
             title="Missing Skills"
             skills={realMissingSkills}
             isMatched={false}
@@ -429,7 +286,7 @@ export default function Results() {
         {atsResult && (
           <>
             {/* Professional Summary Section */}
-            <section className="animate-slide-up" key={`summary-${resultData.uploadId}`}>
+            <section className="animate-slide-up" key={`summary-${updateKey}`}>
               <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-8 border border-primary/20 shadow-medium">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
@@ -437,170 +294,87 @@ export default function Results() {
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-foreground">Professional Summary</h2>
-                    <p className="text-sm text-muted-foreground">HR-Ready Evaluation Report</p>
+                    <p className="text-muted-foreground">Comprehensive analysis of candidate profile</p>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="p-4 bg-card rounded-xl border border-border" key={`summary-text-${resultData.uploadId}`}>
-                    <p className="text-foreground">{professionalSummary}</p>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4" key={`profile-${resultData.uploadId}`}>
-                    <div className="p-4 bg-card rounded-xl border border-border">
-                      <div className="text-sm text-muted-foreground mb-1">Seniority Level</div>
-                      <div className="text-xl font-bold text-foreground">{candidateProfile?.seniority_level}</div>
-                    </div>
-                    <div className="p-4 bg-card rounded-xl border border-border">
-                      <div className="text-sm text-muted-foreground mb-1">Total Experience</div>
-                      <div className="text-xl font-bold text-foreground">{candidateProfile?.total_experience} years</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Detailed Score Breakdown */}
-            <section className="animate-slide-up">
-              <div className="bg-card rounded-2xl p-8 border border-border shadow-medium">
-                <h2 className="text-2xl font-bold text-foreground mb-6">ATS Score Breakdown</h2>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {scoreBreakdown && [
-                    { label: "Skills Match", score: scoreBreakdown.skill_match_score, weight: "40%" },
-                    { label: "Experience Match", score: scoreBreakdown.experience_score, weight: "25%" },
-                    { label: "Role Fit", score: scoreBreakdown.role_fit_score, weight: "15%" },
-                    { label: "Education Match", score: scoreBreakdown.education_match_score, weight: "10%" },
-                    { label: "Certifications", score: scoreBreakdown.certifications_score, weight: "5%" },
-                    { label: "Keywords & Tools", score: Math.round((scoreBreakdown.keyword_match_score + scoreBreakdown.tech_stack_match_score) / 2), weight: "5%" },
-                  ].map((item, index) => (
-                    <div key={index} className="p-4 bg-muted/30 rounded-xl">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-foreground">{item.label}</span>
-                        <span className="text-xs text-muted-foreground">Weight: {item.weight}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden relative">
-                          <div 
-                            className={`h-full bg-gradient-primary rounded-full transition-all duration-1000 ${
-                              item.score >= 90 ? 'w-full' :
-                              item.score >= 80 ? 'w-4/5' :
-                              item.score >= 70 ? 'w-3/4' :
-                              item.score >= 60 ? 'w-3/5' :
-                              item.score >= 50 ? 'w-1/2' :
-                              item.score >= 40 ? 'w-2/5' :
-                              item.score >= 30 ? 'w-1/3' :
-                              item.score >= 20 ? 'w-1/5' :
-                              item.score >= 10 ? 'w-1/12' : 'w-0'
-                            }`}
-                          />
-                        </div>
-                        <span className="text-sm font-bold text-foreground">{Math.round(item.score)}%</span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                    {professionalSummary}
+                  </p>
                 </div>
               </div>
             </section>
 
             {/* Final Recommendation */}
-            <section className="animate-slide-up">
-              <div className={`rounded-2xl p-8 border-2 shadow-medium ${
+            <section className="animate-slide-up" key={`recommendation-${updateKey}`}>
+              <div className={`rounded-2xl p-8 border shadow-medium ${
                 realStatus 
-                  ? 'bg-gradient-to-br from-success/10 to-success/5 border-success/30' 
-                  : 'bg-gradient-to-br from-warning/10 to-warning/5 border-warning/30'
+                  ? "bg-gradient-to-br from-success/10 to-success/5 border-success/20"
+                  : "bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20"
               }`}>
-                <h2 className="text-2xl font-bold text-foreground mb-4">Final Recommendation</h2>
-                <div className="p-4 bg-card rounded-xl border border-border">
-                  <p className="text-foreground font-medium">{finalRecommendation}</p>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                    realStatus 
+                      ? "bg-success/20 text-success"
+                      : "bg-warning/20 text-warning"
+                  }`}>
+                    <Lightbulb className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">Final Recommendation</h2>
+                    <p className="text-muted-foreground">AI-powered hiring decision support</p>
+                  </div>
+                </div>
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-foreground leading-relaxed font-medium">
+                    {finalRecommendation}
+                  </p>
                 </div>
               </div>
             </section>
 
-            {/* Keywords to Add */}
-            {keywordsToAdd && keywordsToAdd.length > 0 && (
-              <section className="animate-slide-up" key={`keywords-${resultData.uploadId}`}>
-                <div className="bg-card rounded-2xl p-8 border border-border shadow-medium">
-                  <h2 className="text-2xl font-bold text-foreground mb-6">Keywords to Add</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {keywordsToAdd.map((keyword, index) => (
-                      <span 
-                        key={`keyword-${resultData.uploadId}-${index}`}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium border border-primary/20"
-                      >
-                        {keyword}
-                      </span>
-                    ))}
+            {/* Improvement Suggestions */}
+            {realSuggestions && realSuggestions.length > 0 && (
+              <section className="animate-slide-up" key={`suggestions-${updateKey}`}>
+                <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl p-8 border border-accent/20 shadow-medium">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 text-accent flex items-center justify-center">
+                      <Lightbulb className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-foreground">
+                        {realStatus ? "Career Enhancement Tips" : "Improvement Recommendations"}
+                      </h2>
+                      <p className="text-muted-foreground">Actionable insights for professional growth</p>
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Adding these keywords to your resume can improve ATS compatibility and match score.
-                  </p>
+                  <ul className="space-y-3">
+                    {realSuggestions.map((suggestion: string, index: number) => (
+                      <li key={`suggestion-${index}-${updateKey}`} className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs font-bold text-accent">{index + 1}</span>
+                        </div>
+                        <p className="text-foreground leading-relaxed">{suggestion}</p>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </section>
             )}
+
+            {/* Download Report Section */}
+            <section className="text-center animate-fade-in" key={`download-${updateKey}`}>
+              <Button
+                onClick={handleDownloadReport}
+                size="lg"
+                className="gap-3 px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <Download className="w-5 h-5" />
+                Download Detailed Report
+              </Button>
+            </section>
           </>
         )}
-
-        {/* AI Feedback Section */}
-        {!realStatus && (
-          <section className="animate-slide-up" key={`feedback-${resultData.uploadId}`}>
-            <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-2xl p-8 border-2 border-warning/30 shadow-medium">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-warning to-destructive flex items-center justify-center">
-                  <Lightbulb className="w-6 h-6 text-warning-foreground" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground">
-                    AI Improvement Suggestions
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Your resume needs improvement to qualify for this role
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                {realSuggestions.map((suggestion: string, index: number) => (
-                  <div
-                    key={`suggestion-${resultData.uploadId}-${index}`}
-                    className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border"
-                  >
-                    <TrendingUp className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-foreground">{suggestion}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Shortlisting Success Section */}
-        {realStatus && (
-          <section className="animate-slide-up" key={`success-${resultData.uploadId}`}>
-            <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-2xl p-8 border-2 border-success/30 shadow-medium text-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-success flex items-center justify-center animate-pulse-glow">
-                  <Download className="w-8 h-8 text-success-foreground" />
-                </div>
-                <h2 className="text-2xl font-bold text-foreground">
-                  Congratulations! 🎉
-                </h2>
-                <p className="text-muted-foreground max-w-md">
-                  You have been shortlisted for this position. Your profile has been
-                  sent to the recruiter.
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Download Report Button */}
-        <section className="flex justify-center animate-fade-in">
-          <Button
-            onClick={handleDownloadReport}
-            size="lg"
-            className="gap-2 bg-gradient-primary hover:opacity-90 transition-opacity text-lg px-8 py-6 shadow-large"
-          >
-            <Download className="w-5 h-5" />
-            Download {realStatus ? "Screening" : "Improvement"} Report
-          </Button>
-        </section>
       </main>
     </div>
   );

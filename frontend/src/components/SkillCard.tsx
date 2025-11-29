@@ -9,11 +9,10 @@ interface SkillCardProps {
 }
 
 export const SkillCard = ({ title, skills, isMatched, className }: SkillCardProps) => {
-  console.log("🏷️ SkillCard: Rendering", title, "with skills:", skills, "isMatched:", isMatched);
+  console.log("🏷️ SkillCard: Rendering", title, "with", skills.length, "skills, isMatched:", isMatched);
   
   return (
     <div
-      key={`skillcard-${title}-${skills.join('-')}-${Date.now()}`}
       className={cn(
         "p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-[1.02] animate-slide-up",
         isMatched
@@ -33,7 +32,7 @@ export const SkillCard = ({ title, skills, isMatched, className }: SkillCardProp
       <div className="space-y-2">
         {skills.map((skill, index) => (
           <div
-            key={`skill-${skill}-${index}-${isMatched}-${Date.now()}`}
+            key={`${skill}-${index}`}
             className={cn(
               "px-4 py-2 rounded-lg text-sm font-medium",
               isMatched
