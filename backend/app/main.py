@@ -16,7 +16,7 @@ from .services.langchain_service_simple import LangChainService
 from .services.vector_service_simple import VectorService
 from .services.scoring_service_simple import ScoringService
 from .services.firebase_service_simple import FirebaseService
-from .services.ats_scoring_service import ATSScoringService
+from .services.evidence_based_ats import EvidenceBasedATSService
 from .models.resume_models import ResumeAnalysis, JobDescription, ScoringResult, ATSResult
 
 load_dotenv()
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
     _services_cache['vector_service'] = VectorService()
     _services_cache['scoring_service'] = ScoringService()
     _services_cache['firebase_service'] = FirebaseService()
-    _services_cache['ats_service'] = ATSScoringService()
+    _services_cache['ats_service'] = EvidenceBasedATSService()
     
     logger.info("Services initialized successfully")
     yield
@@ -81,7 +81,12 @@ app.add_middleware(
         "Content-Language",
         "Content-Type",
         "Authorization",
-        "X-Requested-With"
+        "X-Requested-With",
+        "Cache-Control",
+        "Pragma",
+        "Expires",
+        "X-Timestamp",
+        "X-Request-Id"
     ],
 )
 
@@ -150,22 +155,16 @@ def get_scoring_service() -> ScoringService:
 def get_firebase_service() -> FirebaseService:
     return _services_cache.get('firebase_service') or FirebaseService()
 
-def get_ats_service() -> ATSScoringService:
-    return _services_cache.get('ats_service') or ATSScoringService()
+def get_ats_service() -> EvidenceBasedATSService:
+    return _services_cache.get('ats_service') or EvidenceBasedATSService()
 
 @app.get("/")
 async def root():
     return {"message": "AI Resume Scout API", "status": "active"}
 
-@app.get("/api/health")
-async def health_check():
-    """Health check endpoint for monitoring API availability."""
-    return {
-        "status": "healthy",
-        "message": "AI Resume Scout API is running",
-        "version": "1.0.0"
-    }
+# Legacy endpoints removed - using Evidence-Based ATS endpoints only
 
+# Legacy upload endpoint removed - use /api/ats/evaluate-resume instead
 @app.post("/api/upload-resume", response_model=ResumeAnalysis)
 async def upload_resume(
     file: UploadFile = File(...),
@@ -338,6 +337,54 @@ async def list_all_resumes(
     """Get all stored resume analyses."""
     return await firebase_service.get_all_resume_analyses()
 
+@app.post("/api/ats/evaluate-resume-by-id", response_model=ATSResult)
+async def ats_evaluate_resume_by_id(
+    request: dict,
+    firebase_service: FirebaseService = Depends(get_firebase_service),
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
+):
+    """Evaluate an existing resume by ID against job description."""
+    try:
+        resume_id = request.get("resume_id")
+        job_description = request.get("job_description")
+        
+        if not resume_id:
+            raise HTTPException(status_code=400, detail="Resume ID is required")
+        if not job_description:
+            raise HTTPException(status_code=400, detail="Job description is required")
+        
+        # Get existing resume
+        resume_data = await firebase_service.get_resume_analysis(resume_id)
+        if not resume_data:
+            raise HTTPException(status_code=404, detail="Resume not found")
+        
+        # Convert job description dict to text if needed
+        if isinstance(job_description, dict):
+            job_text = f"""
+            Job Title: {job_description.get('job_title', 'Not specified')}
+            
+            Mandatory Skills: {', '.join(job_description.get('mandatory_skills', []))}
+            Good to Have Skills: {', '.join(job_description.get('good_to_have_skills', []))}
+            Required Experience: {job_description.get('required_experience', 0)} years
+            Education: {', '.join(job_description.get('education_requirements', []))}
+            Tools & Technologies: {', '.join(job_description.get('required_tools_technologies', []))}
+            Industry Domain: {', '.join(job_description.get('required_industry_domain', []))}
+            Keywords: {', '.join(job_description.get('relevant_keywords', []))}
+            """
+        else:
+            job_text = str(job_description)
+        
+        # Perform ATS evaluation
+        result = await ats_service.evaluate_candidate(resume_data.extracted_text, job_text)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error evaluating resume by ID: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Resume evaluation failed: {str(e)}")
+
 @app.delete("/api/resume/{resume_id}")
 async def delete_resume(
     resume_id: str,
@@ -355,12 +402,17 @@ async def delete_resume(
     return {"message": "Resume deleted successfully"}
 
 # New ATS Endpoints
+@app.options("/api/ats/evaluate-resume")
+async def ats_evaluate_resume_options():
+    """Handle preflight OPTIONS request for ATS evaluation endpoint."""
+    return {"message": "OK"}
+
 @app.post("/api/ats/evaluate-resume", response_model=ATSResult)
 async def ats_evaluate_resume(
     file: UploadFile = File(...),
     job_description: str = Form(..., description="Job description text for ATS evaluation"),
     text_service: TextExtractionService = Depends(get_text_service),
-    ats_service: ATSScoringService = Depends(get_ats_service)
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
 ):
     """Comprehensive ATS evaluation of a single resume against job description."""
     try:
@@ -395,12 +447,17 @@ async def ats_evaluate_resume(
         logger.error(f"Error in ATS evaluation: {str(e)}")
         raise HTTPException(status_code=500, detail=f"ATS evaluation failed: {str(e)}")
 
+@app.options("/api/ats/batch-evaluate")
+async def ats_batch_evaluate_options():
+    """Handle preflight OPTIONS request for batch ATS evaluation endpoint."""
+    return {"message": "OK"}
+
 @app.post("/api/ats/batch-evaluate", response_model=List[ATSResult])
 async def ats_batch_evaluate(
     files: List[UploadFile] = File(...),
     job_description: str = Form(..., description="Job description text for batch ATS evaluation"),
     text_service: TextExtractionService = Depends(get_text_service),
-    ats_service: ATSScoringService = Depends(get_ats_service)
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
 ):
     """Batch ATS evaluation of multiple resumes against a job description."""
     try:
@@ -469,7 +526,7 @@ class JobDescriptionRequest(BaseModel):
 @app.post("/api/ats/analyze-job-description")
 async def analyze_job_description(
     request: JobDescriptionRequest,
-    ats_service: ATSScoringService = Depends(get_ats_service)
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
 ):
     """Analyze and extract structured information from job description."""
     try:
@@ -482,14 +539,14 @@ async def analyze_job_description(
         return {
             "job_profile": job_profile,
             "analysis_summary": {
-                "mandatory_skills_count": len(job_profile.mandatory_skills),
-                "good_to_have_skills_count": len(job_profile.good_to_have_skills),
-                "required_experience_years": job_profile.required_experience,
-                "tools_technologies_count": len(job_profile.required_tools_technologies),
-                "education_requirements_specified": len(job_profile.education_requirements) > 0,
-                "certifications_preferred": len(job_profile.preferred_certifications) > 0,
-                "industry_domains": job_profile.required_industry_domain,
-                "key_keywords_count": len(job_profile.relevant_keywords)
+                "mandatory_skills_count": len(job_profile['mandatory_skills']),
+                "good_to_have_skills_count": len(job_profile['good_to_have_skills']),
+                "required_experience_years": job_profile['required_experience'],
+                "tools_technologies_count": len(job_profile['required_tools_technologies']),
+                "education_requirements_specified": len(job_profile['education_requirements']) > 0,
+                "certifications_preferred": len(job_profile['preferred_certifications']) > 0,
+                "industry_domains": job_profile['required_industry_domain'],
+                "key_keywords_count": len(job_profile['relevant_keywords'])
             }
         }
         
@@ -499,17 +556,99 @@ async def analyze_job_description(
         logger.error(f"Error analyzing job description: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Job description analysis failed: {str(e)}")
 
+@app.post("/api/ats/analyze-job-description-file")
+async def analyze_job_description_file(
+    file: UploadFile = File(...),
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
+):
+    """Analyze and extract structured information from job description file."""
+    try:
+        if not file.filename or not (file.filename.endswith('.pdf') or file.filename.endswith('.txt') or file.filename.endswith('.docx')):
+            raise HTTPException(status_code=400, detail="Only PDF, TXT, and DOCX files are supported")
+            
+        # Read file content
+        content = await file.read()
+        
+        # Extract text from file
+        text_service = TextExtractionService()
+        extracted_text = await text_service.extract_text(content, file.filename)
+        
+        if not extracted_text or len(extracted_text.strip()) < 50:
+            raise HTTPException(status_code=400, detail="Could not extract sufficient text from job description file")
+        
+        # Extract job profile
+        job_profile = await ats_service._extract_job_profile(extracted_text)
+        
+        return {
+            "extracted_text": extracted_text,
+            "job_profile": job_profile,
+            "analysis_summary": {
+                "mandatory_skills_count": len(job_profile['mandatory_skills']),
+                "good_to_have_skills_count": len(job_profile['good_to_have_skills']),
+                "required_experience_years": job_profile['required_experience'],
+                "tools_technologies_count": len(job_profile['required_tools_technologies']),
+                "education_requirements_specified": len(job_profile['education_requirements']) > 0,
+                "certifications_preferred": len(job_profile['preferred_certifications']) > 0,
+                "industry_domains": job_profile['required_industry_domain'],
+                "key_keywords_count": len(job_profile['relevant_keywords'])
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error analyzing job description file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Job description file analysis failed: {str(e)}")
+
+@app.get("/api/debug/storage")
+async def debug_storage(
+    firebase_service: FirebaseService = Depends(get_firebase_service)
+):
+    """Debug endpoint to check storage configuration."""
+    import os
+    from pathlib import Path
+    
+    storage_path = firebase_service.storage_path
+    resumes_path = Path(storage_path) / "resumes"
+    
+    return {
+        "storage_path": storage_path,
+        "resumes_path": str(resumes_path.absolute()),
+        "path_exists": resumes_path.exists(),
+        "working_directory": os.getcwd(),
+        "json_files_count": len(list(resumes_path.glob("*.json"))) if resumes_path.exists() else 0,
+        "use_firebase": firebase_service.use_firebase
+    }
+
+@app.post("/api/migrate-to-firebase")
+async def migrate_local_to_firebase(
+    firebase_service: FirebaseService = Depends(get_firebase_service)
+):
+    """Migrate all local resume data to Firebase."""
+    try:
+        migrated_count = await firebase_service.migrate_local_to_firebase()
+        return {
+            "success": True,
+            "message": f"Successfully migrated {migrated_count} resumes to Firebase",
+            "migrated_count": migrated_count
+        }
+    except Exception as e:
+        logger.error(f"Migration failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Migration failed: {str(e)}")
+
 @app.get("/api/health")
 async def health_check():
-    """Health check endpoint."""
+    """Health check endpoint for all AI Resume Scout services."""
     return {
         "status": "healthy",
+        "message": "AI Resume Scout API is running with Evidence-Based ATS",
+        "version": "2.0.0", 
         "services": {
             "text_extraction": "active",
             "langchain": "active", 
             "vector_db": "active",
             "firebase": "active",
-            "ats_scoring": "active"
+            "evidence_based_ats": "active"
         }
     }
 

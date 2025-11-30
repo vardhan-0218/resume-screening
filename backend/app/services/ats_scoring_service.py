@@ -7,78 +7,13 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from ..models.resume_models import ATSResult, ATSScoreBreakdown, ATSCandidateProfile, ATSJobProfile
 
 logger = logging.getLogger(__name__)
 
 # Professional ATS Scoring Engine - Implementing exact user logic
 
-@dataclass
-class ATSCandidateProfile:
-    """STEP 1: 14-Point Resume Parsing - Extract These Parameters (User's Exact Logic)"""
-    candidate_summary: str  # 1. Candidate Summary (2 lines)
-    total_experience: int  # 2. Total Experience (Years)
-    relevant_experience: int  # 3. Relevant Experience (Years related to JD)
-    technical_skills: List[str]  # 4. Skills (Technical)
-    soft_skills: List[str]  # 4. Skills (Soft Skills) 
-    tools_technologies: List[str]  # 5. Tools & Technologies Used
-    certifications: List[str]  # 6. Certifications
-    education_details: List[str]  # 7. Education Details
-    job_titles: List[str]  # 8. Job Titles Held
-    projects_responsibilities: List[str]  # 9. Projects & Responsibilities
-    achievements_awards: List[str]  # 10. Achievements / Awards
-    domain_experience: List[str]  # 11. Domain Experience (IT, Finance, Healthcare, etc.)
-    contact_information: Dict[str, str]  # 12. Contact Information
-    resume_keywords: List[str]  # 13. Resume Keywords Extracted
-    seniority_level: str  # 14. Seniority Level (Junior | Mid | Senior)
-
-@dataclass
-class ATSJobProfile:
-    """STEP 2: Job Description Parsing - Extract These Parameters (User's Exact Logic)"""
-    mandatory_skills: List[str]  # 1. Mandatory Skills
-    good_to_have_skills: List[str]  # 2. Good-to-Have Skills
-    required_experience: int  # 3. Required Experience
-    required_tools_technologies: List[str]  # 4. Required Tools/Technologies
-    role_responsibilities: List[str]  # 5. Role Responsibilities
-    education_requirements: List[str]  # 6. Education Requirements
-    preferred_certifications: List[str]  # 7. Preferred Certifications
-    required_industry_domain: List[str]  # 8. Required Industry Domain
-    relevant_keywords: List[str]  # 9. Relevant Keywords
-
-@dataclass
-class ATSScoreBreakdown:
-    """STEP 3: Skill Matching & Scoring + STEP 4: Weighted ATS Score (User's Exact Logic)"""
-    # Professional ATS weights as specified by user:
-    skill_match_score: float  # Skills Match → 40%
-    experience_score: float  # Experience Match → 25%
-    role_fit_score: float  # Role Responsibilities Match → 15%
-    education_match_score: float  # Education Match → 10%
-    certifications_score: float  # Certifications Match → 5%
-    tech_stack_match_score: float  # Keywords/Tools Match → 5%
-    keyword_match_score: float  # Additional keyword analysis
-    
-    # STEP 6: Missing Skills & Improvement Analysis
-    matched_skills: List[str]  # Found skills
-    missing_skills: List[str]  # Missing Technical + Soft Skills
-    matched_tools: List[str]  # Found tools/frameworks
-    missing_tools: List[str]  # Missing Tools / Frameworks
-    matched_keywords: List[str]  # Keyword matches
-    missing_keywords: List[str]  # Keywords to Add to Improve ATS score
-    matched_certifications: List[str]  # Found certifications
-    missing_certifications: List[str]  # Missing Certifications
-
-@dataclass
-class ATSResult:
-    """Complete ATS evaluation result - User's Exact Output Format"""
-    # Your Output Format:
-    ats_score: float  # 1. ATS Score (0–100)
-    status: str  # 2. Status (Shortlisted / Borderline / Not Shortlisted)
-    score_breakdown: ATSScoreBreakdown  # 3-9. All scoring details
-    candidate_profile: ATSCandidateProfile  # Resume parsing results
-    job_profile: ATSJobProfile  # JD parsing results
-    professional_summary: str  # 10. Professional Summary for Recruiter (3-4 lines)
-    improvement_suggestions: List[str]  # 11. Improvement Suggestions
-    keywords_to_add: List[str]  # 12. Keywords to Add
-    final_recommendation: str  # 13. Final Recommendation
+# Using ATSResult, ATSScoreBreakdown, ATSCandidateProfile, ATSJobProfile from resume_models.py for proper FastAPI serialization
 
 class ATSScoringService:
     """Advanced Resume Screening Engine - Professional ATS Implementation"""
@@ -139,15 +74,18 @@ class ATSScoringService:
 
     async def evaluate_candidate(self, resume_text: str, job_description: str) -> ATSResult:
         """
-        Professional ATS Evaluation Engine - User's Exact 7-Step Process
+        Evidence-driven, professional Resume Screening Engine (ATS-grade).
         
-        🔍 STEP 1: Resume Parsing (Extract 14 Parameters)
-        🔍 STEP 2: Job Description Parsing (Extract 9 Parameters)  
-        🔍 STEP 3: Skill Matching & Scoring (ATS Algorithm)
-        🔍 STEP 4: Weighted ATS Score (0–100%) - Professional weights
-        🔍 STEP 5: Result Classification (Shortlisted/Borderline/Not Shortlisted)
-        🔍 STEP 6: Missing Skills & Improvement Suggestions
-        🔍 STEP 7: Summary for Recruiters
+        Operates strictly: never hallucinates, never invents facts, never assumes missing information.
+        Uses USER'S EXACT SYSTEM PROMPT LOGIC with evidence-based extraction and deterministic scoring.
+        
+        WEIGHTS (USER SPECIFIED):
+        - Skills → 40%
+        - Experience → 25% 
+        - Role Fit → 15%
+        - Education → 10%
+        - Certifications → 5%
+        - Tools/Keywords → 5%
         """
         try:
             logger.info("🔍 Starting Professional ATS Evaluation (User's Exact Logic)...")
@@ -379,28 +317,38 @@ class ATSScoringService:
         )
 
     def _calculate_weighted_score(self, scores: ATSScoreBreakdown) -> float:
-        """STEP 4: Calculate weighted final score with exact professional weights"""
+        """STEP 4: Calculate weighted final score using USER'S EXACT WEIGHTS"""
         
+        # USER'S EXACT PROFESSIONAL ATS WEIGHTS:
         weighted_score = (
-            scores.skill_match_score * 0.40 +      # 40%
-            scores.experience_score * 0.25 +       # 25%
-            scores.role_fit_score * 0.15 +         # 15%
-            scores.education_match_score * 0.10 +  # 10%
-            scores.certifications_score * 0.05 +   # 5%
-            scores.tech_stack_match_score * 0.05   # 5%
+            scores.skill_match_score * 0.40 +          # Skills Match → 40% (USER SPECIFIED)
+            scores.experience_score * 0.25 +           # Experience Match → 25% (USER SPECIFIED)
+            scores.role_fit_score * 0.15 +             # Role Responsibilities Match → 15% (USER SPECIFIED)
+            scores.education_match_score * 0.10 +      # Education Match → 10% (USER SPECIFIED)
+            scores.certifications_score * 0.05 +       # Certifications Match → 5% (USER SPECIFIED)
+            scores.tech_stack_match_score * 0.05       # Keywords/Tools Match → 5% (USER SPECIFIED)
         )
+        
+        logger.info(f"Weighted Score Calculation:")
+        logger.info(f"  Skills ({scores.skill_match_score:.1f}%) × 40% = {scores.skill_match_score * 0.40:.1f}")
+        logger.info(f"  Experience ({scores.experience_score:.1f}%) × 25% = {scores.experience_score * 0.25:.1f}")
+        logger.info(f"  Role Fit ({scores.role_fit_score:.1f}%) × 15% = {scores.role_fit_score * 0.15:.1f}")
+        logger.info(f"  Education ({scores.education_match_score:.1f}%) × 10% = {scores.education_match_score * 0.10:.1f}")
+        logger.info(f"  Certifications ({scores.certifications_score:.1f}%) × 5% = {scores.certifications_score * 0.05:.1f}")
+        logger.info(f"  Tech/Tools ({scores.tech_stack_match_score:.1f}%) × 5% = {scores.tech_stack_match_score * 0.05:.1f}")
+        logger.info(f"  TOTAL WEIGHTED SCORE = {weighted_score:.1f}%")
         
         return min(100.0, max(0.0, weighted_score))
 
     def _determine_status(self, score: float) -> str:
-        """STEP 5: Determine professional status based on score"""
+        """STEP 5: Result Classification using USER'S EXACT CRITERIA"""
         
-        if score >= 80.0:
-            return "SHORTLISTED"
-        elif score >= 50.0:
-            return "BORDERLINE – NEEDS IMPROVEMENT"
+        if score >= 80:
+            return "SHORTLISTED"                    # Score ≥ 80% (USER SPECIFIED)
+        elif 50 <= score < 80:
+            return "BORDERLINE – NEEDS IMPROVEMENT"   # Score 50%–79% (USER SPECIFIED)
         else:
-            return "NOT SHORTLISTED"
+            return "NOT SHORTLISTED"                # Score < 50% (USER SPECIFIED)
 
     # Extraction helper methods (implemented with strict no-hallucination logic)
     
