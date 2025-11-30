@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, Query, BackgroundTasks, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
@@ -18,19 +18,8 @@ from .services.scoring_service_simple import ScoringService
 from .services.firebase_service_simple import FirebaseService
 from .services.evidence_based_ats import EvidenceBasedATSService
 from .models.resume_models import ResumeAnalysis, JobDescription, ScoringResult, ATSResult
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
 
-
-app = FastAPI()
 load_dotenv()
-
-FRONTEND_URL = "https://resume-screening-neh8.onrender.com"
-
-@app.get("/")
-def home():
-    return RedirectResponse(FRONTEND_URL)
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -66,6 +55,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# ---------------------------------------------------
+# FRONTEND REDIRECT + BACKEND STATUS ROUTES
+# ---------------------------------------------------
+
+FRONTEND_URL = "https://resume-screening-neh8.onrender.com"
+
 # Add compression middleware
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
@@ -81,7 +76,8 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "http://127.0.0.1:8080",
         "http://127.0.0.1:8081",
-        "http://127.0.0.1:8082"
+        "http://127.0.0.1:8082",
+        "https://your-frontend.onrender.com"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -169,8 +165,19 @@ def get_ats_service() -> EvidenceBasedATSService:
     return _services_cache.get('ats_service') or EvidenceBasedATSService()
 
 @app.get("/")
-async def root():
-    return {"message": "AI Resume Scout API", "status": "active"}
+def redirect_to_frontend():
+    return RedirectResponse(FRONTEND_URL)
+
+@app.get("/status")
+def backend_status():
+    return {
+        "message": "Backend active",
+        "frontend": FRONTEND_URL
+    }
+
+# ---------------------------------------------------
+# Logging, Middleware, Services, and API routes
+# ---------------------------------------------------
 
 # Legacy endpoints removed - using Evidence-Based ATS endpoints only
 
