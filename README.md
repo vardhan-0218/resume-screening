@@ -47,7 +47,7 @@ ai-resume-scout/
    cd ai-resume-scout
    ```
 
-2. **Backend Setup**
+2. **Backend Setup** ([Detailed Guide](./docs/backend-setup.md))
    ```bash
    cd backend
    pip install -r requirements.txt
@@ -56,7 +56,7 @@ ai-resume-scout/
    python main.py
    ```
 
-3. **Frontend Setup**
+3. **Frontend Setup** ([Detailed Guide](./docs/frontend-setup.md))
    ```bash
    cd frontend
    npm install
@@ -167,4 +167,21 @@ npm run dev
 - ✅ Candidate and HR workflows
 
 ## 🆘 Need Help?
-Check the detailed [SETUP_GUIDE.md](./SETUP_GUIDE.md) for complete instructions.
+
+**Quick Setup Issues:**
+- Make sure Python 3.8+ and Node.js 16+ are installed
+- Check that all environment variables are set in `.env`
+- Verify API keys are valid (Google AI, Firebase)
+
+**Common Issues:**
+- Port conflicts: Change ports in the configuration files
+- Import errors: Run `pip install -r requirements.txt` in backend folder
+- Frontend issues: Run `npm install` in frontend folder
+
+**Documentation:**
+- [Backend Setup Guide](./docs/backend-setup.md)
+- [Frontend Setup Guide](./docs/frontend-setup.md)
+
+- [Quick Start Script](./scripts/start_app.sh)
+
+- API Documentation: http://localhost:8000/docs (when server is running)
