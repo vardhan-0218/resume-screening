@@ -18,8 +18,18 @@ from .services.scoring_service_simple import ScoringService
 from .services.firebase_service_simple import FirebaseService
 from .services.evidence_based_ats import EvidenceBasedATSService
 from .models.resume_models import ResumeAnalysis, JobDescription, ScoringResult, ATSResult
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 
+
+app = FastAPI()
 load_dotenv()
+
+FRONTEND_URL = "https://resume-screening-neh8.onrender.com"
+
+@app.get("/")
+def home():
+    return RedirectResponse(FRONTEND_URL)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
