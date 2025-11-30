@@ -4,8 +4,15 @@ import uuid
 import logging
 import numpy as np
 from typing import List, Dict, Any, Optional
-import faiss
 from pathlib import Path
+
+# Try to import faiss, fallback to None if not available
+try:
+    import faiss
+    FAISS_AVAILABLE = True
+except ImportError:
+    faiss = None
+    FAISS_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +25,10 @@ class VectorService:
         # FAISS index and metadata
         self.index = None
         self.metadata = {}
+        self.faiss_available = FAISS_AVAILABLE
+        
+        if not self.faiss_available:
+            logger.warning("⚠️ FAISS not available - vector operations will be disabled")
         self.dimension = 384  # Default dimension
         
         # Ensure directory exists
@@ -28,6 +39,11 @@ class VectorService:
     
     def _load_index(self):
         """Load existing FAISS index and metadata."""
+        if not self.faiss_available:
+            logger.info("📁 FAISS not available - using fallback mode")
+            self.metadata = {}
+            return
+            
         try:
             index_file = os.path.join(self.index_path, "faiss.index")
             metadata_file = os.path.join(self.index_path, "metadata.pkl")
@@ -52,6 +68,11 @@ class VectorService:
     
     def _create_new_index(self):
         """Create a new FAISS index."""
+        if not self.faiss_available:
+            self.metadata = {}
+            logger.info("✅ Created fallback index (no FAISS)")
+            return
+            
         try:
             self.index = faiss.IndexFlatL2(self.dimension)
             self.metadata = {}
@@ -100,6 +121,16 @@ class VectorService:
         try:
             resume_id = str(uuid.uuid4())
             
+            if not self.faiss_available:
+                # Fallback: just store metadata without vector operations
+                self.metadata[resume_id] = {
+                    'filename': filename,
+                    'text': text,
+                    'embedding': embeddings[:384] if len(embeddings) > 384 else embeddings
+                }
+                logger.info(f"✅ Stored resume {filename} in fallback mode")
+                return resume_id
+            
             # Convert embeddings to numpy array
             embedding_array = np.array(embeddings, dtype=np.float32)
             if len(embeddings) != self.dimension:
@@ -134,6 +165,19 @@ class VectorService:
             if resume_id not in self.metadata:
                 logger.warning(f"Resume {resume_id} not found in metadata")
                 return 0.0
+            
+            if not self.faiss_available:
+                # Fallback: simple text-based similarity
+                resume_text = self.metadata[resume_id]['text'].lower()
+                job_text = job_description.lower()
+                
+                # Simple keyword overlap calculation
+                resume_words = set(resume_text.split())
+                job_words = set(job_text.split())
+                overlap = len(resume_words.intersection(job_words))
+                total = len(resume_words.union(job_words))
+                
+                return overlap / total if total > 0 else 0.0
             
             # Create embedding for job description
             job_embedding = self._create_simple_embedding(job_description)
