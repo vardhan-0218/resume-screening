@@ -248,7 +248,7 @@ export default function Results() {
 
       {/* Header */}
       <header className="relative z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto px-6 py-6">
+        <div className="fluid-width fluid-padding py-4 md:py-6">
           {/* Desktop Navigation */}
           <div className="hidden sm:flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -310,7 +310,7 @@ export default function Results() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-12 space-y-8" key={`results-${updateKey}`}>
+      <main className="fluid-width fluid-padding py-6 md:py-8 lg:py-12 fluid-gap flex flex-col" key={`results-${updateKey}`}>
         {/* Status Section */}
         <section className="text-center space-y-6 animate-fade-in" key={`status-${updateKey}`}>
           <StatusBadge isShortlisted={realStatus} key={`badge-${updateKey}`} />

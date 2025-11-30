@@ -60,7 +60,7 @@ export default function Home() {
 
       <div className="relative z-10">
         {/* Header/Navigation */}
-        <header className="container mx-auto px-6 py-6">
+        <header className="fluid-width fluid-padding py-4 md:py-6">
           {/* Desktop Navigation */}
           <div className="hidden sm:flex justify-between items-center">
             <div className="flex items-center gap-2">
@@ -98,24 +98,39 @@ export default function Home() {
             
             {/* Mobile Dropdown Menu */}
             {isMobileMenuOpen && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-card/95 backdrop-blur-lg rounded-lg border border-border shadow-lg z-50">
-                <div className="p-4 space-y-3">
-                  <Button variant="outline" onClick={() => { navigate("/auth/login"); setIsMobileMenuOpen(false); }} className="w-full">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Login
-                  </Button>
-                  <Button onClick={() => { navigate("/auth/signup"); setIsMobileMenuOpen(false); }} className="w-full">
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Sign Up
-                  </Button>
+              <>
+                {/* Backdrop overlay */}
+                <div 
+                  className="fixed inset-0 bg-black/20 z-[9998] backdrop-blur-sm sm:hidden"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                {/* Dropdown menu */}
+                <div className="absolute top-full right-0 mt-2 w-48 bg-card border border-border shadow-xl rounded-lg z-[9999]">
+                  <div className="p-4 space-y-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => { navigate("/auth/login"); setIsMobileMenuOpen(false); }} 
+                      className="w-full touch-enhanced hover:bg-primary/10 transition-colors"
+                    >
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login
+                    </Button>
+                    <Button 
+                      onClick={() => { navigate("/auth/signup"); setIsMobileMenuOpen(false); }} 
+                      className="w-full touch-enhanced hover:bg-primary/90 transition-colors"
+                    >
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Sign Up
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </header>
 
         {/* Hero Section */}
-        <section className="container mx-auto px-6 py-20 text-center">
+        <section className="fluid-width fluid-padding py-12 md:py-20 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-3 mb-8 px-6 py-3 bg-gradient-accent rounded-full text-accent-foreground shadow-medium">
               <Brain className="w-5 h-5" />
@@ -155,7 +170,7 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="container mx-auto px-6 py-20">
+        <section className="fluid-width fluid-padding py-12 md:py-20">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">
               Why Choose AI Resume Scout?
@@ -205,7 +220,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="container mx-auto px-6 py-20 text-center">
+        <section className="fluid-width fluid-padding py-12 md:py-20 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl font-bold text-foreground mb-6">
               Ready to Transform Your Hiring Process?
@@ -228,9 +243,9 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="container mx-auto px-6 py-8 border-t border-border">
+        <footer className="fluid-width fluid-padding py-6 md:py-8 border-t border-border">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 AI Resume Scout. Powered by advanced AI technology.</p>
+            <p>&copy; 2025 AI Resume Scout. Powered by advanced AI technology.</p>
           </div>
         </footer>
       </div>

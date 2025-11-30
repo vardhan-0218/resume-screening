@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHybridAuth } from "@/hooks/useHybridAuth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { LogOut, Upload, FileText, Send, Brain, ArrowLeft, Home } from "lucide-react";
+import { LogOut, Upload, FileText, Send, Brain, ArrowLeft, Home, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 import { FileUpload } from "@/components/FileUpload";
 import { apiClient, JobDescription, ScoringResult } from "@/lib/api";
@@ -33,6 +33,21 @@ export default function HRDashboard() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<ScoringResult[]>([]);
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && !(event.target as Element).closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMobileMenuOpen]);
 
   // Results are now stored in component state after analysis
 
@@ -354,30 +369,66 @@ AI Resume Scout Team`);
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border/50 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              onClick={handleBackToHome}
-              className="gap-2 hover:bg-primary/10"
-            >
-              <Home className="w-4 h-4" />
-              Home
+      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border/50 px-4 sm:px-6 py-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Desktop Navigation */}
+          <div className="hidden sm:flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                onClick={handleBackToHome}
+                className="gap-2 hover:bg-primary/10"
+              >
+                <Home className="w-4 h-4" />
+                Home
+              </Button>
+              <div className="w-px h-6 bg-border" />
+              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                HR Dashboard
+              </h1>
+            </div>
+            <Button variant="ghost" onClick={handleSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
             </Button>
-            <div className="w-px h-6 bg-border" />
-            <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              HR Dashboard
-            </h1>
           </div>
-          <Button variant="ghost" onClick={handleSignOut}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+
+          {/* Mobile Navigation */}
+          <div className="sm:hidden relative mobile-menu-container">
+            <div className="flex justify-between items-center">
+              <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">
+                HR Dashboard
+              </h1>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="flex items-center gap-2 hover:bg-primary/10"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+            
+            {/* Mobile Dropdown Menu */}
+            {isMobileMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-48 bg-card/95 backdrop-blur-lg rounded-lg border border-border shadow-lg z-50">
+                <div className="p-4 space-y-3">
+                  <Button variant="ghost" onClick={() => { handleBackToHome(); setIsMobileMenuOpen(false); }} className="w-full justify-start">
+                    <Home className="w-4 h-4 mr-2" />
+                    Home
+                  </Button>
+                  <Button variant="outline" onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }} className="w-full justify-start">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto p-6 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Upload Section */}
         <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
           <h2 className="text-xl font-bold mb-6">Bulk Resume Screening</h2>
@@ -588,7 +639,7 @@ AI Resume Scout Team`);
                           </div>
                         )}
                         
-                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
                             <span className="font-medium text-success">Matched Skills: </span>
                             <span className="text-muted-foreground">

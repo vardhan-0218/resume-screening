@@ -13,6 +13,7 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import HRDashboard from "./pages/hr/Dashboard";
 import NotFound from "./pages/NotFound";
+import ResponsiveVerification from "@/components/ResponsiveVerification";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route path="/test/responsive" element={<ResponsiveVerification />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

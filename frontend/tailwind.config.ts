@@ -8,12 +8,35 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "0.75rem",    // 320px+ (small phones)
+        xs: "1rem",           // 375px+ (phones)
+        sm: "1.25rem",        // 640px+ (large phones)
+        md: "1.5rem",         // 768px+ (tablets)
+        lg: "2rem",           // 1024px+ (laptops)
+        xl: "2.5rem",         // 1280px+ (desktops)
+        "2xl": "3rem",       // 1536px+ (large screens)
+      },
       screens: {
-        "2xl": "1400px",
+        xs: "375px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+        "3xl": "1920px",
       },
     },
     extend: {
+      screens: {
+        xs: "375px",          // Large phones
+        sm: "640px",          // Small tablets
+        md: "768px",          // Tablets
+        lg: "1024px",         // Small laptops
+        xl: "1280px",         // Laptops/desktops
+        "2xl": "1536px",     // Large desktops
+        "3xl": "1920px",     // Ultra-wide screens
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

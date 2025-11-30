@@ -235,16 +235,17 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-20 w-72 h-72 bg-accent/20 rounded-full blur-3xl animate-pulse-glow" />
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-glow [animation-delay:1s]" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="relative z-10 w-full min-h-screen">
+        <div className="fluid-width fluid-padding py-6 sm:py-8 md:py-10 lg:py-12">
         {/* Header */}
-        <header className="mb-16 animate-fade-in">
+        <header className="mb-8 md:mb-16 animate-fade-in">
           {/* Desktop Navigation */}
           <div className="hidden sm:flex justify-between items-center mb-6">
             <Button 
@@ -335,10 +336,10 @@ export default function Index() {
               <Brain className="w-5 h-5" />
               <span className="text-sm font-semibold">Powered by Advanced AI</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent leading-tight">
+            <h1 className="fluid-heading font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
               {userRole === 'hr' ? 'HR Resume Screening Dashboard' : 'AI Resume Screening System'}
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4 sm:px-0">
+            <p className="fluid-text text-muted-foreground w-full max-w-4xl mx-auto px-4 sm:px-0">
               {userRole === 'hr' 
                 ? 'Access your HR dashboard for multiple resume screening and candidate ranking'
                 : user 
@@ -349,12 +350,12 @@ export default function Index() {
         </header>
 
         {/* Main Content */}
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full max-w-7xl mx-auto">
           {/* Upload interface - always visible but disabled when not logged in */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="responsive-grid grid grid-cols-1 md:grid-cols-2 fluid-gap">
               {/* Left Panel - Upload Section */}
-              <section className="space-y-8 animate-slide-up">
-                <div className="bg-card/80 backdrop-blur-lg rounded-3xl p-8 border border-border shadow-large relative">
+              <section className="space-y-6 md:space-y-8 animate-slide-up">
+                <div className="bg-card/80 backdrop-blur-lg rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-border shadow-large relative w-full">
                   {!user && (
                     <div className="absolute inset-0 bg-background/80 backdrop-blur-sm rounded-3xl z-10 flex items-center justify-center">
                       <div className="text-center p-6">
@@ -371,13 +372,13 @@ export default function Index() {
                     <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
                       <Sparkles className="w-5 h-5 text-primary-foreground" />
                     </div>
-                    <h2 className="text-2xl font-bold text-foreground">
+                    <h2 className="fluid-text-xl md:fluid-text-2xl font-bold text-foreground">
                       Upload Documents
                     </h2>
                   </div>
 
                   <div className="space-y-6 animate-slide-up">
-                  <FileUpload
+                    <FileUpload
                     label="Upload Your Resume"
                     onFileChange={setResumeFile}
                     resetTrigger={resetTrigger}
@@ -390,7 +391,16 @@ export default function Index() {
                     <div className="space-y-3">
                       <FileUpload
                         label="Upload Job Description File (Optional)"
-                        onFileChange={handleJobDescFileChange}
+                        onFileChange={(file) => {
+                          if (!file) {
+                            // Clear job description state when FileUpload signals removal
+                            setJobDescFile(null);
+                            setJobDescText("");
+                            return;
+                          }
+                          // Call the async handler for non-null files (ignore returned Promise)
+                          void handleJobDescFileChange(file);
+                        }}
                         resetTrigger={resetTrigger}
                         showClearButton={true}
                       />
@@ -405,7 +415,7 @@ export default function Index() {
                           value={jobDescText}
                           onChange={(e) => setJobDescText(e.target.value)}
                           placeholder="Paste the complete job description here including required skills, experience, education requirements, etc."
-                          className="w-full h-32 px-4 py-3 border border-border rounded-xl bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                          className="w-full h-28 sm:h-32 px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-lg sm:rounded-xl bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent resize-none fluid-text-sm"
                           disabled={isAnalyzing}
                         />
                         <div className="mt-1 text-xs text-muted-foreground">
@@ -415,20 +425,20 @@ export default function Index() {
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
                     <Button
                       variant="outline"
                       onClick={handleReset}
                       disabled={isAnalyzing || (!resumeFile && !jobDescFile && !jobDescText)}
-                      className="flex-1 h-14 text-lg font-semibold border-2 hover:bg-muted/50 transition-colors"
+                      className="w-full sm:flex-1 h-12 sm:h-14 fluid-text-sm sm:text-lg font-semibold border-2 hover:bg-muted/50 transition-colors touch-friendly"
                     >
-                      <RotateCcw className="w-5 h-5 mr-2" />
+                      <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Reset
                     </Button>
                     <Button
                       onClick={handleScreening}
                       disabled={isAnalyzing || !user || !resumeFile || (!jobDescText.trim() && !jobDescFile)}
-                      className="flex-[2] h-14 text-lg font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-large disabled:opacity-50"
+                      className="w-full sm:flex-[2] h-12 sm:h-14 fluid-text-sm sm:text-lg font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-large disabled:opacity-50 touch-friendly"
                     >
                       {isAnalyzing ? (
                         <>
@@ -463,11 +473,11 @@ export default function Index() {
             </section>
 
             {/* Right Panel - Info Section */}
-            <section className="space-y-6 animate-slide-up [animation-delay:0.2s]">
-              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border border-primary/20 shadow-medium">
-                <h3 className="text-2xl font-bold text-foreground mb-6">
+            <section className="space-y-4 md:space-y-6 animate-slide-up [animation-delay:0.2s]">
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-primary/20 shadow-medium w-full">
+                <h2 className="fluid-text-2xl font-bold text-foreground mb-4 md:mb-6">
                   How It Works
-                </h3>
+                </h2>
                 <div className="space-y-4">
                   {[
                     {
@@ -488,7 +498,7 @@ export default function Index() {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="flex gap-4 p-4 bg-card/50 rounded-xl border border-border"
+                      className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-card/50 rounded-lg sm:rounded-xl border border-border"
                     >
                       <div className="w-10 h-10 rounded-full bg-gradient-accent flex items-center justify-center flex-shrink-0 text-accent-foreground font-bold">
                         {item.step}
@@ -504,7 +514,7 @@ export default function Index() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-3xl p-8 border border-success/20 shadow-medium">
+              <div className="bg-gradient-to-br from-success/10 to-success/5 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-success/20 shadow-medium w-full">
                 <h3 className="text-xl font-bold text-foreground mb-4">
                   ✨ What You'll Get
                 </h3>
@@ -519,15 +529,16 @@ export default function Index() {
                     "Keywords optimization suggestions for ATS",
                     "Role fit analysis and hiring decision support",
                   ].map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3 text-sm">
-                      <div className="w-2 h-2 rounded-full bg-success" />
-                      <span className="text-foreground">{feature}</span>
+                    <li key={index} className="flex items-start gap-2 sm:gap-3 fluid-text-xs sm:text-sm">
+                      <div className="w-2 h-2 rounded-full bg-success flex-shrink-0 mt-1.5" />
+                      <span className="text-foreground flex-1">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </section>
           </div>
+        </div>
         </div>
       </div>
     </div>

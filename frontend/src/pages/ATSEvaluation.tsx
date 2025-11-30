@@ -202,7 +202,7 @@ export default function ATSEvaluationPage() {
         {!atsResult ? (
           /* Input Section */
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {/* Resume Upload */}
               <Card className="h-fit">
                 <CardHeader>
@@ -315,7 +315,7 @@ We are looking for a Senior Software Engineer with 5+ years of experience in Pyt
           </div>
         ) : (
           /* Results Section */
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full sm:max-w-7xl sm:mx-auto">
             {/* Overall Score Header */}
             <Card className="mb-8 bg-gradient-to-r from-primary/10 to-accent/10 border-2">
               <CardContent className="p-8">
