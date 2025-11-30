@@ -1,0 +1,92 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and temp files
+uploads/*
+!uploads/.gitkeep
+temp/
+tmp/
+
+# Vector database
+vector_db/faiss.index
+vector_db/*.pkl
+
+# Test files (when added later)
+test_*.txt
+test_*.py
+*test*.json
+tests/
+
+# Analysis and temporary files
+*ANALYSIS*.md
+*SUMMARY*.md
+*AUDIT*.md
+*COMPARISON*.md
+*VERIFICATION*.md
+*FIXED*.md
+*TEST_GUIDE*.md
+fix_*.py
+verify_*.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

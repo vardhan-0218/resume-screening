@@ -32,6 +32,20 @@ class EvidenceBasedATSService:
             'kubernetes': ['kubernetes', 'k8s'],
             'git': ['git', 'github', 'version control'],
         }
+        
+        # Comprehensive skill keywords for job description parsing
+        self.skill_keywords = {
+            'programming': ['python', 'java', 'javascript', 'typescript', 'c++', 'c#', 'ruby', 'go', 'rust', 'php', 'swift', 'kotlin'],
+            'web_frontend': ['react', 'angular', 'vue', 'html', 'css', 'sass', 'scss', 'webpack', 'next.js', 'nuxt.js', 'svelte'],
+            'web_backend': ['node.js', 'express', 'django', 'flask', 'spring', 'spring boot', 'fastapi', '.net', 'asp.net', 'laravel'],
+            'databases': ['sql', 'mysql', 'postgresql', 'mongodb', 'redis', 'elasticsearch', 'cassandra', 'dynamodb', 'oracle'],
+            'cloud': ['aws', 'azure', 'gcp', 'google cloud', 'docker', 'kubernetes', 'terraform', 'ansible', 'jenkins'],
+            'data_science': ['machine learning', 'deep learning', 'tensorflow', 'pytorch', 'pandas', 'numpy', 'scikit-learn', 'data analysis'],
+            'tools': ['git', 'github', 'gitlab', 'jira', 'ci/cd', 'linux', 'agile', 'scrum', 'devops'],
+            'mobile': ['android', 'ios', 'react native', 'flutter', 'xamarin', 'mobile development'],
+            'testing': ['unit testing', 'integration testing', 'selenium', 'jest', 'pytest', 'testing'],
+            'other': ['api', 'rest', 'graphql', 'microservices', 'blockchain', 'security']
+        }
         logger.info("✅ Evidence-Based ATS Service initialized")
     
     async def _extract_job_profile(self, job_description_text: str) -> Dict:
@@ -292,20 +306,24 @@ class EvidenceBasedATSService:
                 final_recommendation=self._generate_final_recommendation(ats_score, status)
             )
             
-            logger.info(f"✅ Evidence-based ATS evaluation complete - Score: {ats_score}% ({status})")
             return result
             
         except Exception as e:
-            logger.error(f"❌ Evidence-based ATS evaluation failed: {str(e)}")
+            logger.error(f"❌ Error in ATS evaluation: {str(e)}")
             raise
-    
+
     async def _parse_resume_with_evidence(self, resume_text: str) -> Dict[str, Any]:
-        """Parse resume with evidence-based extraction - no hallucinations"""
+        """Parse resume with evidence-based extraction"""
         text_lower = resume_text.lower()
         
-        # Extract candidate summary (first few lines)
-        lines = resume_text.strip().split('\n')[:5]
-        candidate_summary = ' '.join([line.strip() for line in lines if line.strip()])[:200]
+        # Extract candidate summary (first meaningful paragraph)
+        candidate_summary = ""
+        lines = resume_text.split('\n')
+        for i, line in enumerate(lines[:10]):  # Check first 10 lines
+            line = line.strip()
+            if len(line) > 50 and not any(keyword in line.lower() for keyword in ['email', 'phone', 'address', 'linkedin']):
+                candidate_summary = line
+                break
         
         # Extract experience years with evidence
         exp_patterns = [

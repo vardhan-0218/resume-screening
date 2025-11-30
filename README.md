@@ -1,57 +1,151 @@
-# AI Resume Scout - Quick Start
+# AI Resume Scout
 
-## 🚀 One-Command Setup & Start
+A modern AI-powered resume screening and ATS (Applicant Tracking System) tool that helps HR professionals and recruiters efficiently evaluate resumes against job descriptions.
 
-### For Unix/Linux/macOS/WSL:
-```bash
-# Setup (run once)
-./setup.sh
+## 🚀 Features
 
-# Start servers
-./start.sh
+- **Intelligent Resume Parsing**: Extract structured data from resumes with evidence-based parsing
+- **ATS Scoring**: Professional-grade scoring algorithm with detailed breakdowns
+- **Job Description Analysis**: Automatically extract requirements from job postings
+- **Batch Processing**: Evaluate multiple resumes simultaneously
+- **Real-time Results**: Instant scoring with detailed feedback
+- **Professional Reports**: Generate comprehensive evaluation reports
+
+## 🏗️ Project Structure
+
+```
+ai-resume-scout/
+├── backend/                 # FastAPI backend server
+│   ├── app/                # Application code
+│   │   ├── models/         # Pydantic models
+│   │   └── services/       # Business logic services
+│   ├── data/               # Data storage
+│   ├── uploads/            # File uploads
+│   └── vector_db/          # Vector database
+├── frontend/               # React TypeScript frontend
+│   ├── src/                # Source code
+│   │   ├── components/     # React components
+│   │   ├── pages/          # Page components
+│   │   └── lib/            # Utilities
+│   └── public/             # Static files
+├── docs/                   # Documentation
+└── scripts/                # Utility scripts
 ```
 
-### For Windows Command Line:
-```cmd
-# Setup (run once)
-cd backend
-python -m pip install -r requirements.txt
-cd ../frontend  
-npm install
-cd ..
+## 🛠️ Quick Start
 
-# Start backend (Terminal 1)
-cd backend
-python start_server.py
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
 
-# Start frontend (Terminal 2) 
-cd frontend
-npm run dev
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/vardhan-0218/resume-screening.git
+   cd ai-resume-scout
+   ```
+
+2. **Backend Setup**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   cp .env.example .env
+   # Edit .env with your configuration
+   python main.py
+   ```
+
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+4. **Start the Application**
+   ```bash
+   # From the root directory
+   ./scripts/start_app.sh
+   ```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+
+## 📖 Documentation
+
+- [Backend Setup Guide](./docs/backend-setup.md)
+- [Frontend Setup Guide](./docs/frontend-setup.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔧 Environment Variables
+
+Create a `.env` file in the backend directory:
+
+```env
+# Google AI Configuration
+GOOGLE_API_KEY=your_google_api_key_here
+
+# Firebase Configuration  
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_PRIVATE_KEY=your_private_key
+FIREBASE_CLIENT_EMAIL=your_client_email
+
+# Database Configuration
+DATABASE_URL=your_database_url
+
+# Other Configuration
+DEBUG=True
+LOG_LEVEL=INFO
 ```
 
-## 🌐 Access URLs
-- **Frontend**: http://localhost:8080
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
+## 🚀 Deployment
 
-## 📋 Manual Commands
+The application is ready for deployment on platforms like:
+- **Backend**: Railway, Render, Heroku, or any cloud platform supporting Python
+- **Frontend**: Vercel, Netlify, or any static hosting service
 
-### Backend Setup:
-```bash
-cd backend
-python -m pip install -r requirements.txt
-```
+## 📊 Tech Stack
 
-### Frontend Setup:
-```bash
-cd frontend
-npm install
-```
+**Backend:**
+- FastAPI
+- Python 3.8+
+- Google AI (Gemini)
+- Firebase
+- FAISS Vector Database
+
+**Frontend:**
+- React 18
+- TypeScript
+- Tailwind CSS
+- Vite
+- React Query
+
+## 🎯 Key Components
+
+- **Evidence-Based ATS Service**: Core resume evaluation engine
+- **Vector Service**: Semantic search and matching
+- **Firebase Service**: Data persistence and user management
+- **Text Extraction**: Multi-format resume parsing
+- **Scoring Service**: Professional scoring algorithms
 
 ### Start Backend:
 ```bash
 cd backend
-python start_server.py
+python main.py
 ```
 
 ### Start Frontend:

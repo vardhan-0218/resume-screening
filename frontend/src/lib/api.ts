@@ -120,7 +120,7 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     try {
       const response = await fetch(url, {
         headers: {
@@ -157,11 +157,11 @@ class ApiClient {
   ): Promise<ResumeAnalysis> {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     if (jobDescription) {
       formData.append('job_description', jobDescription);
     }
-    
+
     if (jobDescriptionFile) {
       formData.append('job_description_file', jobDescriptionFile);
     }
@@ -300,7 +300,7 @@ class ApiClient {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8001.');
+        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
       }
       throw error;
     }
@@ -314,7 +314,7 @@ class ApiClient {
     try {
       // Process files one by one using the same evaluation logic
       const results: ATSResult[] = [];
-      
+
       for (const file of files) {
         try {
           const result = await this.evaluateResumeWithATS(file, jobDescription);
