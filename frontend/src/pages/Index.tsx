@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/FileUpload";
-import { Loader2, Sparkles, Brain, LogIn, LogOut, User, Users, ArrowLeft, RotateCcw } from "lucide-react";
+import { Loader2, Sparkles, Brain, LogIn, LogOut, User, Users, ArrowLeft, RotateCcw, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 import { apiClient, ATSResult } from "@/lib/api";
 import { useHybridAuth } from "@/hooks/useHybridAuth";
@@ -15,7 +15,22 @@ export default function Index() {
   const [jobDescText, setJobDescText] = useState<string>("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && !(event.target as Element).closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMobileMenuOpen]);
+
   // Clear any cached results on page load
   useEffect(() => {
     console.log("🧹 CLEARING ALL CACHES - Fresh Index Load");
@@ -227,10 +242,11 @@ export default function Index() {
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-glow [animation-delay:1s]" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 py-12">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
         <header className="mb-16 animate-fade-in">
-          <div className="flex justify-between items-center mb-6">
+          {/* Desktop Navigation */}
+          <div className="hidden sm:flex justify-between items-center mb-6">
             <Button 
               variant="ghost" 
               onClick={handleBackToHome}
@@ -242,16 +258,17 @@ export default function Index() {
             </Button>
             <div className="flex items-center gap-4">
             {user ? (
-              <div className="flex items-center gap-4">
+              <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   {userRole === 'hr' ? <Users className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                  {user.email} ({userRole?.toUpperCase()})
+                  <span>{user.email}</span>
+                  <span className="text-xs">({userRole?.toUpperCase()})</span>
                 </div>
                 <Button variant="outline" onClick={signOut}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </Button>
-              </div>
+              </>
             ) : (
               <Button variant="outline" onClick={() => navigate("/auth/login")}>
                 <LogIn className="w-4 h-4 mr-2" />
@@ -260,15 +277,68 @@ export default function Index() {
             )}
             </div>
           </div>
+
+          {/* Mobile Navigation */}
+          <div className="sm:hidden relative mb-6 mobile-menu-container">
+            <div className="flex justify-between items-center">
+              <Button 
+                variant="ghost" 
+                onClick={handleBackToHome}
+                className="flex items-center gap-2 hover:bg-primary/10"
+                disabled={isAnalyzing}
+                size="sm"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Home
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="flex items-center gap-2 hover:bg-primary/10"
+                disabled={isAnalyzing}
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+            
+            {/* Mobile Dropdown Menu */}
+            {isMobileMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-64 bg-card/95 backdrop-blur-lg rounded-lg border border-border shadow-lg z-50">
+                <div className="p-4 space-y-4">
+                  {user ? (
+                    <>
+                      <div className="flex items-start gap-2 text-sm text-muted-foreground border-b border-border pb-3">
+                        {userRole === 'hr' ? <Users className="w-4 h-4 mt-0.5 flex-shrink-0" /> : <User className="w-4 h-4 mt-0.5 flex-shrink-0" />}
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-foreground font-medium truncate">{user.email}</span>
+                          <span className="text-xs text-muted-foreground">{userRole?.toUpperCase()} Account</span>
+                        </div>
+                      </div>
+                      <Button variant="outline" onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="w-full">
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <Button variant="outline" onClick={() => { navigate("/auth/login"); setIsMobileMenuOpen(false); }} className="w-full">
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
           <div className="text-center">
             <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 bg-gradient-accent rounded-full text-accent-foreground shadow-medium">
               <Brain className="w-5 h-5" />
               <span className="text-sm font-semibold">Powered by Advanced AI</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent leading-tight">
               {userRole === 'hr' ? 'HR Resume Screening Dashboard' : 'AI Resume Screening System'}
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4 sm:px-0">
               {userRole === 'hr' 
                 ? 'Access your HR dashboard for multiple resume screening and candidate ranking'
                 : user 

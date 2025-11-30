@@ -1,9 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { Brain, Sparkles, CheckCircle, ArrowRight, LogIn, UserPlus } from "lucide-react";
+import { Brain, Sparkles, CheckCircle, ArrowRight, LogIn, UserPlus, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && !(event.target as Element).closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMobileMenuOpen]);
 
   const features = [
     {
@@ -45,7 +61,8 @@ export default function Home() {
       <div className="relative z-10">
         {/* Header/Navigation */}
         <header className="container mx-auto px-6 py-6">
-          <div className="flex justify-between items-center">
+          {/* Desktop Navigation */}
+          <div className="hidden sm:flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Brain className="w-8 h-8 text-primary" />
               <h1 className="text-2xl font-bold text-foreground">AI Resume Scout</h1>
@@ -60,6 +77,40 @@ export default function Home() {
                 Sign Up
               </Button>
             </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="sm:hidden relative mobile-menu-container">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Brain className="w-6 h-6 text-primary" />
+                <h1 className="text-lg font-bold text-foreground">AI Resume Scout</h1>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="flex items-center gap-2 hover:bg-primary/10"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+            
+            {/* Mobile Dropdown Menu */}
+            {isMobileMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-48 bg-card/95 backdrop-blur-lg rounded-lg border border-border shadow-lg z-50">
+                <div className="p-4 space-y-3">
+                  <Button variant="outline" onClick={() => { navigate("/auth/login"); setIsMobileMenuOpen(false); }} className="w-full">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Login
+                  </Button>
+                  <Button onClick={() => { navigate("/auth/signup"); setIsMobileMenuOpen(false); }} className="w-full">
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Sign Up
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 

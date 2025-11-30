@@ -1,4 +1,4 @@
-import { ArrowLeft, Download, Lightbulb, TrendingUp, Home, RotateCcw, Brain } from "lucide-react";
+import { ArrowLeft, Download, Lightbulb, TrendingUp, Home, RotateCcw, Brain, Menu, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,21 @@ export default function Results() {
   const navigate = useNavigate();
   const location = useLocation();
   const [updateKey, setUpdateKey] = useState<number>(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && !(event.target as Element).closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMobileMenuOpen]);
   
   // Get ATS results from navigation state  
   const resultData = location.state;
@@ -234,7 +249,8 @@ export default function Results() {
       {/* Header */}
       <header className="relative z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
+          {/* Desktop Navigation */}
+          <div className="hidden sm:flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
                 <Brain className="w-6 h-6 text-primary-foreground" />
@@ -252,6 +268,44 @@ export default function Results() {
               <RotateCcw className="w-4 h-4" />
               New Screening
             </Button>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="sm:hidden relative mobile-menu-container">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
+                  <Brain className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold text-foreground">ATS Results</h1>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="flex items-center gap-2 hover:bg-primary/10"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+            
+            {/* Mobile Dropdown Menu */}
+            {isMobileMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-48 bg-card/95 backdrop-blur-lg rounded-lg border border-border shadow-lg z-50">
+                <div className="p-4">
+                  <Button
+                    onClick={() => { handleBackToAnalysis(); setIsMobileMenuOpen(false); }}
+                    variant="outline"
+                    className="gap-2 hover:bg-primary/10 border-primary/20 w-full"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    New Screening
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
