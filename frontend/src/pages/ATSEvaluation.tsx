@@ -131,7 +131,8 @@ export default function ATSEvaluationPage() {
       formData.append('file', resumeFile);
       formData.append('job_description', jobDescription);
 
-      const response = await fetch('http://localhost:8000/api/ats/evaluate-resume', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/api/ats/evaluate-resume`, {
         method: 'POST',
         body: formData,
       });

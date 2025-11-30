@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export interface ResumeAnalysis {
   id: string;
@@ -38,7 +38,7 @@ export interface ScoringResult {
   candidate_email?: string;
   // Enhanced for ATS integration
   atsResult?: ATSResult;
-  detailed_scoring?: any;
+  detailed_scoring?: Record<string, unknown>;
   rank?: number;
   recommendations?: string[];
 }
@@ -144,7 +144,7 @@ class ApiClient {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:8000');
+        throw new Error(`Cannot connect to server. Please ensure the backend is running on ${API_BASE_URL}`);
       }
       throw error;
     }
@@ -188,13 +188,25 @@ class ApiClient {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
+        throw new Error(`Unable to connect to server. Please ensure the backend is running on ${API_BASE_URL}.`);
       }
       throw error;
     }
   }
 
-  async analyzeJobDescriptionFile(file: File): Promise<any> {
+  async analyzeJobDescriptionFile(file: File): Promise<{
+    job_profile: ATSJobProfile;
+    analysis_summary: {
+      mandatory_skills_count: number;
+      good_to_have_skills_count: number;
+      required_experience_years: number;
+      tools_technologies_count: number;
+      education_requirements_specified: boolean;
+      certifications_preferred: boolean;
+      industry_domains: string[];
+      key_keywords_count: number;
+    };
+  }> {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -217,10 +229,22 @@ class ApiClient {
         throw new Error(error.detail || `HTTP error! status: ${response.status}`);
       }
 
-      return response.json();
+      return response.json() as Promise<{
+        job_profile: ATSJobProfile;
+        analysis_summary: {
+          mandatory_skills_count: number;
+          good_to_have_skills_count: number;
+          required_experience_years: number;
+          tools_technologies_count: number;
+          education_requirements_specified: boolean;
+          certifications_preferred: boolean;
+          industry_domains: string[];
+          key_keywords_count: number;
+        };
+      }>;
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
+        throw new Error(`Unable to connect to server. Please ensure the backend is running on ${API_BASE_URL}.`);
       }
       throw error;
     }
@@ -300,7 +324,7 @@ class ApiClient {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
+        throw new Error(`Unable to connect to server. Please ensure the backend is running on ${API_BASE_URL}.`);
       }
       throw error;
     }
