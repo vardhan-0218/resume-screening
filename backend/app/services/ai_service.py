@@ -10,8 +10,8 @@ from ..models.resume_models import SkillAnalysis
 
 logger = logging.getLogger(__name__)
 
-class LangChainService:
-    """Simplified AI service for skill extraction and embeddings."""
+class AIService:
+    """AI service for skill extraction and embeddings using OpenAI and Google AI."""
     
     def __init__(self):
         self.openai_api_key = os.getenv("OPENAI_API_KEY")

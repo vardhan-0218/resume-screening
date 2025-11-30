@@ -12,7 +12,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from .services.text_extraction import TextExtractionService
-from .services.langchain_service_simple import LangChainService
+from .services.ai_service import AIService
 from .services.vector_service_simple import VectorService
 from .services.scoring_service_simple import ScoringService
 from .services.firebase_service_simple import FirebaseService
@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
     # Pre-initialize services to improve first request performance
     global _services_cache
     _services_cache['text_service'] = TextExtractionService()
-    _services_cache['langchain_service'] = LangChainService()
+    _services_cache['ai_service'] = AIService()
     _services_cache['vector_service'] = VectorService()
     _services_cache['scoring_service'] = ScoringService()
     _services_cache['firebase_service'] = FirebaseService()
@@ -143,8 +143,8 @@ async def _validate_resume_content(text: str) -> bool:
 def get_text_service() -> TextExtractionService:
     return _services_cache.get('text_service') or TextExtractionService()
 
-def get_langchain_service() -> LangChainService:
-    return _services_cache.get('langchain_service') or LangChainService()
+def get_ai_service() -> AIService:
+    return _services_cache.get('ai_service') or AIService()
 
 def get_vector_service() -> VectorService:
     return _services_cache.get('vector_service') or VectorService()
@@ -171,7 +171,7 @@ async def upload_resume(
     job_description: Optional[str] = None,
     job_description_file: Optional[UploadFile] = None,
     text_service: TextExtractionService = Depends(get_text_service),
-    langchain_service: LangChainService = Depends(get_langchain_service),
+    ai_service: AIService = Depends(get_ai_service),
     vector_service: VectorService = Depends(get_vector_service),
     firebase_service: FirebaseService = Depends(get_firebase_service)
 ):
@@ -216,8 +216,8 @@ async def upload_resume(
                 detail="This file doesn't appear to contain a resume. Please upload a valid resume with professional information like skills, experience, or education."
             )
         
-        # Process with LangChain for skill extraction and embeddings
-        skills_analysis = await langchain_service.extract_skills(extracted_text)
+        # Process with AI service for skill extraction and embeddings
+        skills_analysis = await ai_service.extract_skills(extracted_text)
         
         # Debug: Log extracted skills and info
         logger.info(f"🔍 Skills analysis result:")
@@ -226,7 +226,7 @@ async def upload_resume(
         logger.info(f"   Education: {skills_analysis.education}")
         logger.info(f"   Email: {skills_analysis.email}")
         
-        embeddings = await langchain_service.generate_embeddings(extracted_text)
+        embeddings = await ai_service.generate_embeddings(extracted_text)
         
         # Create unique resume ID based on content and timestamp
         import hashlib
@@ -645,7 +645,7 @@ async def health_check():
         "version": "2.0.0", 
         "services": {
             "text_extraction": "active",
-            "langchain": "active", 
+            "ai_service": "active", 
             "vector_db": "active",
             "firebase": "active",
             "evidence_based_ats": "active"
