@@ -1,8 +1,3 @@
-# Build tools (must be first)
-setuptools>=65.0.0
-wheel
-build
-
 # Core backend
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -34,9 +29,8 @@ numpy==1.24.3
 pandas==2.1.4
 scikit-learn==1.3.2
 
-# PyTorch (compatible for CPU builds)
+# PyTorch (CPU builds)
 torch==2.1.1
-torchvision==0.16.1
 
 # Google/Firebase
 firebase-admin==6.2.0
@@ -46,5 +40,3 @@ protobuf==4.25.1
 # Others
 httpx==0.25.2
 aiofiles==23.2.1
-
-python-3.10.13

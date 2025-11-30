@@ -22,18 +22,21 @@ def main():
     if str(backend_dir) not in sys.path:
         sys.path.insert(0, str(backend_dir))
     
+    # Get port from environment variable (for deployment) or use 8000 as default
+    port = int(os.getenv("PORT", 8000))
+    
     print("Starting AI Resume Scout Backend Server...")
     print(f"Backend directory: {backend_dir}")
-    print("Server will be available at: http://localhost:8000")
-    print("API documentation at: http://localhost:8000/docs")
+    print(f"Server will be available at: http://localhost:{port}")
+    print(f"API documentation at: http://localhost:{port}/docs")
     print("=" * 60)
     
     # Start the server
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,
+        reload=os.getenv("DEBUG", "False").lower() == "true",
         log_level="info"
     )
 
