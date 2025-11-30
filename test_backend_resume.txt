@@ -1,6 +1,0 @@
-JOHN DOE - Senior Software Engineer
-Email: john@test.com
-5 years experience in software development
-Skills: React, Python, JavaScript, Node.js, MongoDB
-Education: Computer Science Degree
-Projects: E-commerce platform, API development

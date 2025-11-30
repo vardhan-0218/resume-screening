@@ -167,11 +167,48 @@ class ApiClient {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/upload-resume`, {
+      const response = await fetch(`${API_BASE_URL}/api/ats/batch-evaluate`, {
         method: 'POST',
         body: formData,
         headers: {
           'Accept': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Timestamp': Date.now().toString(),
+          'X-Request-Id': Math.random().toString(36).substring(7)
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
+      }
+      throw error;
+    }
+  }
+
+  async analyzeJobDescriptionFile(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/ats/analyze-job-description-file`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Timestamp': Date.now().toString(),
+          'X-Request-Id': Math.random().toString(36).substring(7)
         },
       });
 
@@ -232,6 +269,7 @@ class ApiClient {
   }
 
   // New ATS Methods
+  // Unified ATS Evaluation Method - Works for both single and batch
   async evaluateResumeWithATS(
     file: File,
     jobDescription: string
@@ -246,6 +284,11 @@ class ApiClient {
         body: formData,
         headers: {
           'Accept': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'X-Timestamp': Date.now().toString(),
+          'X-Request-Id': Math.random().toString(36).substring(7)
         },
       });
 
@@ -257,39 +300,34 @@ class ApiClient {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
+        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8001.');
       }
       throw error;
     }
   }
 
+  // Batch evaluation using the same unified logic
   async evaluateBatchWithATS(
     files: File[],
     jobDescription: string
   ): Promise<ATSResult[]> {
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    formData.append('job_description', jobDescription);
-
     try {
-      const response = await fetch(`${API_BASE_URL}/api/ats/batch-evaluate`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.detail || `HTTP error! status: ${response.status}`);
+      // Process files one by one using the same evaluation logic
+      const results: ATSResult[] = [];
+      
+      for (const file of files) {
+        try {
+          const result = await this.evaluateResumeWithATS(file, jobDescription);
+          results.push(result);
+        } catch (error) {
+          console.error(`Failed to evaluate ${file.name}:`, error);
+          // Continue with other files even if one fails
+        }
       }
 
-      return response.json();
+      return results;
     } catch (error) {
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please ensure the backend is running on port 8000.');
-      }
+      console.error('Batch evaluation error:', error);
       throw error;
     }
   }

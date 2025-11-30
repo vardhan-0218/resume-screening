@@ -62,33 +62,41 @@ export default function Results() {
     );
   }
 
-  // Extract ONLY real ATS data - no legacy data allowed
-  const {
-    atsResult,
-    candidateProfile,
-    scoreBreakdown,
-    professionalSummary,
-    finalRecommendation,
-    keywordsToAdd
-  } = resultData;
+  // Extract ATS data - ensure consistent display format
+  const { atsResult } = resultData;
 
-  // Use ONLY real-time ATS evaluation data
+  // Use Evidence-Based ATS evaluation data (consistent with test results)  
   const realScore = atsResult.ats_score;
-  const realStatus = atsResult.status === "SHORTLISTED";
-  const realMatchedSkills = atsResult.score_breakdown.matched_skills;
-  const realMissingSkills = atsResult.score_breakdown.missing_skills;
-  const realSuggestions = atsResult.improvement_suggestions;
+  const realStatus = atsResult.status;
+  const isShortlisted = realStatus === "SHORTLISTED";
+  const realMatchedSkills = atsResult.score_breakdown?.matched_skills || [];
+  const realMissingSkills = atsResult.score_breakdown?.missing_skills || [];
+  const realSuggestions = atsResult.improvement_suggestions || [];
+  const professionalSummary = atsResult.professional_summary || "";
+  const finalRecommendation = atsResult.final_recommendation || "";
+
+  // Score breakdown components (consistent with backend Evidence-Based ATS)
+  const scoreBreakdown = {
+    skill_match_score: atsResult.score_breakdown?.skill_match_score || 0,
+    experience_score: atsResult.score_breakdown?.experience_score || 0,
+    role_fit_score: atsResult.score_breakdown?.role_fit_score || 0,
+    education_match_score: atsResult.score_breakdown?.education_match_score || 0,
+    certifications_score: atsResult.score_breakdown?.certifications_score || 0,
+    tech_stack_match_score: atsResult.score_breakdown?.tech_stack_match_score || 0
+  };
 
   const skillMatchLevel = realScore >= 80 ? "High" : realScore >= 60 ? "Medium" : "Low";
   
-  // Log the actual display values
-  console.log("📊 DISPLAY VALUES:");
-  console.log("- Real Score:", realScore);
-  console.log("- Real Status:", realStatus);
+  // Log the actual display values for debugging
+  console.log("📊 EVIDENCE-BASED ATS DISPLAY VALUES:");
+  console.log("- ATS Score:", realScore, "%");
+  console.log("- Status:", realStatus);  
+  console.log("- Is Shortlisted:", isShortlisted);
   console.log("- Skill Match Level:", skillMatchLevel);
-  console.log("- Matched Skills:", realMatchedSkills);
-  console.log("- Missing Skills:", realMissingSkills);
-  console.log("- Suggestions:", realSuggestions);
+  console.log("- Matched Skills:", realMatchedSkills?.length || 0);
+  console.log("- Missing Skills:", realMissingSkills?.length || 0);
+  console.log("- Score Breakdown:", scoreBreakdown);
+  console.log("- Suggestions Count:", realSuggestions?.length || 0);
 
   const handleBackToAnalysis = () => {
     navigate("/", { replace: true });
@@ -282,6 +290,76 @@ export default function Results() {
           />
         </section>
 
+        {/* Evidence-Based ATS Score Breakdown */}
+        <section className="animate-slide-up" key={`breakdown-${updateKey}`}>
+          <div className="bg-card rounded-2xl p-8 border border-border shadow-medium">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Evidence-Based Score Breakdown</h2>
+                <p className="text-muted-foreground">Detailed analysis using professional ATS criteria</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="bg-primary/5 p-4 rounded-xl border border-primary/20">
+                <div className="text-2xl font-bold text-primary">{scoreBreakdown.skill_match_score}%</div>
+                <div className="text-sm text-muted-foreground">Skills Match (40%)</div>
+              </div>
+              <div className="bg-accent/5 p-4 rounded-xl border border-accent/20">
+                <div className="text-2xl font-bold text-accent">{scoreBreakdown.experience_score}%</div>
+                <div className="text-sm text-muted-foreground">Experience (25%)</div>
+              </div>
+              <div className="bg-secondary/5 p-4 rounded-xl border border-secondary/20">
+                <div className="text-2xl font-bold text-secondary">{scoreBreakdown.role_fit_score}%</div>
+                <div className="text-sm text-muted-foreground">Role Fit (15%)</div>
+              </div>
+              <div className="bg-success/5 p-4 rounded-xl border border-success/20">
+                <div className="text-2xl font-bold text-success">{scoreBreakdown.education_match_score}%</div>
+                <div className="text-sm text-muted-foreground">Education (10%)</div>
+              </div>
+              <div className="bg-warning/5 p-4 rounded-xl border border-warning/20">
+                <div className="text-2xl font-bold text-warning">{scoreBreakdown.certifications_score}%</div>
+                <div className="text-sm text-muted-foreground">Certifications (5%)</div>
+              </div>
+              <div className="bg-info/5 p-4 rounded-xl border border-info/20">
+                <div className="text-2xl font-bold text-info">{scoreBreakdown.tech_stack_match_score}%</div>
+                <div className="text-sm text-muted-foreground">Tech Stack (5%)</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Candidate Profile Information */}
+        <section className="animate-slide-up" key={`profile-${updateKey}`}>
+          <div className="bg-card rounded-2xl p-6 border border-border shadow-medium">
+            <h2 className="text-xl font-bold text-foreground mb-4">Candidate Profile Summary</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-3 bg-primary/5 rounded-lg">
+                <div className="text-2xl font-bold text-primary">{atsResult.candidate_profile?.total_experience || 0}</div>
+                <div className="text-sm text-muted-foreground">Years Experience</div>
+              </div>
+              <div className="text-center p-3 bg-accent/5 rounded-lg">
+                <div className="text-2xl font-bold text-accent">{atsResult.candidate_profile?.technical_skills?.length || 0}</div>
+                <div className="text-sm text-muted-foreground">Technical Skills</div>
+              </div>
+              <div className="text-center p-3 bg-secondary/5 rounded-lg">
+                <div className="text-2xl font-bold text-secondary">{atsResult.candidate_profile?.certifications?.length || 0}</div>
+                <div className="text-sm text-muted-foreground">Certifications</div>
+              </div>
+              <div className="text-center p-3 bg-success/5 rounded-lg">
+                <div className="text-2xl font-bold text-success">{atsResult.candidate_profile?.education_details?.length || 0}</div>
+                <div className="text-sm text-muted-foreground">Education Entries</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+              <div className="text-sm font-medium text-foreground mb-1">Seniority Level:</div>
+              <div className="text-foreground">{atsResult.candidate_profile?.seniority_level || 'Not determined'}</div>
+            </div>
+          </div>
+        </section>
+
         {/* Comprehensive ATS Results - Only shown when ATS data is available */}
         {atsResult && (
           <>
@@ -308,7 +386,7 @@ export default function Results() {
             {/* Final Recommendation */}
             <section className="animate-slide-up" key={`recommendation-${updateKey}`}>
               <div className={`rounded-2xl p-8 border shadow-medium ${
-                realStatus 
+                isShortlisted 
                   ? "bg-gradient-to-br from-success/10 to-success/5 border-success/20"
                   : "bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20"
               }`}>

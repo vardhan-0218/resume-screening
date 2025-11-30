@@ -19,16 +19,29 @@ export default function Index() {
   // Clear any cached results on page load
   useEffect(() => {
     console.log("🧹 CLEARING ALL CACHES - Fresh Index Load");
-    sessionStorage.removeItem('lastAtsResult');
     
-    // Clear browser cache if possible
+    // Clear all possible cached data
+    sessionStorage.clear();
+    localStorage.removeItem('lastAtsResult');
+    localStorage.removeItem('lastUploadId');
+    localStorage.removeItem('atsEvaluationCache');
+    
+    // Clear browser caches
     if ('caches' in window) {
       caches.keys().then(names => {
         names.forEach(name => {
-          if (name.includes('ats') || name.includes('resume')) {
+          if (name.includes('ats') || name.includes('resume') || name.includes('api')) {
             caches.delete(name);
+            console.log(`🗑️ Cleared cache: ${name}`);
           }
         });
+      });
+    }
+    
+    // Force browser to reload API calls
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.ready.then(registration => {
+        registration.update();
       });
     }
   }, []);
@@ -111,19 +124,45 @@ export default function Index() {
       }
 
       // Perform comprehensive ATS evaluation
+      console.log("🚀 CALLING ATS API:");
+      console.log("- Resume file:", resumeFile.name, resumeFile.size, "bytes");
+      console.log("- Job description length:", finalJobDescription.length, "chars");
+      console.log("- API endpoint: /api/ats/evaluate-resume");
+      
       const atsResult: ATSResult = await apiClient.evaluateResumeWithATS(
         resumeFile,
         finalJobDescription
       );
 
       console.log("📡 API RESPONSE DEBUG:");
+      console.log("=".repeat(50));
       console.log("1. Raw ATS Result:", JSON.stringify(atsResult, null, 2));
-      console.log("2. ATS Score:", atsResult.ats_score);
+      console.log("2. ATS Score:", atsResult.ats_score, "(type:", typeof atsResult.ats_score, ")");
       console.log("3. Status:", atsResult.status);
       console.log("4. Matched Skills:", atsResult.score_breakdown?.matched_skills);
+      console.log("5. Professional Summary:", atsResult.professional_summary?.substring(0, 100) + "...");
+      console.log("6. Is this REAL data?", atsResult.ats_score !== 85 && atsResult.status !== "Shortlisted");
+      console.log("=".repeat(50));
 
       // Determine if shortlisted based on ATS score
       const isShortlisted = atsResult.status === "SHORTLISTED";
+      
+      // REAL DATA VALIDATION - Only flag actual dummy content, not legitimate results
+      const isDummyData = (
+        atsResult.professional_summary?.toLowerCase().includes("dummy") ||
+        atsResult.professional_summary?.toLowerCase().includes("sample") ||
+        atsResult.professional_summary?.toLowerCase().includes("placeholder") ||
+        atsResult.candidate_profile?.candidate_summary?.toLowerCase().includes("dummy")
+      );
+      
+      if (isDummyData) {
+        console.error("🚨 DUMMY DATA DETECTED! This should NOT happen!");
+        console.error("Professional Summary:", atsResult.professional_summary);
+        toast.error("Warning: Dummy data detected. Backend may not be processing correctly.");
+      } else {
+        console.log("✅ REAL DATA CONFIRMED - Score:", atsResult.ats_score, "Status:", atsResult.status);
+        console.log("✅ Evidence-Based ATS evaluation successful");
+      }
       
       // Navigate to results with ONLY real ATS data - NO legacy/dummy data
       const navigationState = {

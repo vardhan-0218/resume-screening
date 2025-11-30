@@ -41,9 +41,9 @@ export default function HRDashboard() {
     
     setIsExtracting(true);
     try {
-      console.log('Uploading job description file:', file.name);
+      console.log('Analyzing job description file:', file.name);
       // Use API to extract job details from the file
-      const analysis = await apiClient.uploadResume(file);
+      const analysis = await apiClient.analyzeJobDescriptionFile(file);
       console.log('Job description analysis result:', analysis);
       
       // Extract job title using simple text processing
@@ -509,10 +509,11 @@ AI Resume Scout Team`);
           ) : (
             <div className="grid gap-4">
               {sortedResults.map((result, index) => {
-                const isShortlisted = result.total_score >= 70;
+                const isShortlisted = result.is_shortlisted || result.total_score >= 80;
+                const isGoodCandidate = result.total_score >= 60; // Show actions for good candidates too
                 return (
                   <Card key={result.resume_id} className={`p-6 bg-card/50 backdrop-blur-sm border-border/50 ${
-                    isShortlisted ? 'ring-2 ring-success/30' : ''
+                    isShortlisted ? 'ring-2 ring-success/30' : isGoodCandidate ? 'ring-1 ring-blue-500/20' : ''
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -529,12 +530,24 @@ AI Resume Scout Team`);
                             <h3 className="text-lg font-bold">
                               {result.filename}
                             </h3>
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                isShortlisted 
+                                  ? 'bg-success/20 text-success' 
+                                  : isGoodCandidate 
+                                    ? 'bg-blue-500/20 text-blue-600' 
+                                    : 'bg-muted text-muted-foreground'
+                              }`}>
+                                {result.atsResult?.status || (isShortlisted ? 'SHORTLISTED' : 'UNDER REVIEW')}
+                              </div>
+                              <span className="text-sm font-semibold">ATS Score: {result.total_score}%</span>
+                            </div>
                             <div className="text-sm text-muted-foreground">
-                              <span>Overall: {result.total_score}%</span>
-                              <span className="mx-2">•</span>
                               <span>Skills: {result.skill_match_score?.toFixed(0)}%</span>
                               <span className="mx-2">•</span>
                               <span>Experience: {result.experience_score?.toFixed(0)}%</span>
+                              <span className="mx-2">•</span>
+                              <span>Education: {result.education_score?.toFixed(0)}%</span>
                               {result.project_score !== undefined && (
                                 <>
                                   <span className="mx-2">•</span>
@@ -565,6 +578,16 @@ AI Resume Scout Team`);
                           </div>
                         </div>
                         
+                        {/* Professional Summary from ATS */}
+                        {result.atsResult?.professional_summary && (
+                          <div className="mb-4 p-3 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border-l-4 border-blue-500">
+                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">Professional Summary:</span>
+                            <p className="text-sm text-blue-900 dark:text-blue-300 mt-1">
+                              {result.atsResult.professional_summary}
+                            </p>
+                          </div>
+                        )}
+                        
                         <div className="grid md:grid-cols-2 gap-4 text-sm">
                           <div>
                             <span className="font-medium text-success">Matched Skills: </span>
@@ -593,24 +616,61 @@ AI Resume Scout Team`);
                       </div>
                     </div>
                     
-                    {isShortlisted && (
-                      <div className="mt-4 pt-4 border-t border-border/30 flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => sendShortlistEmail(result.candidate_email || 'candidate@example.com', result.filename)}
-                          className="bg-success/10 text-success hover:bg-success/20"
-                          disabled={!result.candidate_email}
-                        >
-                          <Send className="w-4 h-4 mr-2" />
-                          {result.candidate_email ? 'Send Shortlist Email' : 'No Email Found'}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => toast.info(`Interview scheduled for ${result.candidate_name || result.filename}`)}
-                        >
-                          Schedule Interview
-                        </Button>
+                    {/* Action buttons for all candidates with score >= 60 */}
+                    {isGoodCandidate && (
+                      <div className="mt-4 pt-4 border-t border-border/30">
+                        <div className="flex flex-wrap gap-2">
+                          {isShortlisted ? (
+                            <>
+                              <Button
+                                size="sm"
+                                onClick={() => sendShortlistEmail(result.candidate_email || 'candidate@example.com', result.filename)}
+                                className="bg-success/10 text-success hover:bg-success/20"
+                                disabled={!result.candidate_email}
+                              >
+                                <Send className="w-4 h-4 mr-2" />
+                                {result.candidate_email ? 'Send Shortlist Email' : 'No Email Found'}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => toast.info(`Interview scheduled for ${result.candidate_name || result.filename}`)}
+                              >
+                                Schedule Interview
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                size="sm"
+                                onClick={() => {
+                                  const subject = `Application Update - ${extractedJobTitle || 'Position'}`;
+                                  const body = `Thank you for your application. We are reviewing your profile and will get back to you soon.`;
+                                  const mailtoLink = `mailto:${result.candidate_email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                  window.open(mailtoLink, '_blank');
+                                  toast.success(`Email client opened for ${result.filename}`);
+                                }}
+                                className="bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
+                                disabled={!result.candidate_email}
+                              >
+                                <Send className="w-4 h-4 mr-2" />
+                                {result.candidate_email ? 'Send Update' : 'No Email Found'}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => toast.info(`Feedback noted for ${result.filename}`)}
+                              >
+                                Provide Feedback
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          {isShortlisted 
+                            ? "✅ Shortlisted candidate - Ready for interview process" 
+                            : "📋 Under review - Good potential candidate"}
+                        </div>
                       </div>
                     )}
                   </Card>
