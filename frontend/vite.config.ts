@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     port: 8080,
     host: "::",
+    historyApiFallback: true,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

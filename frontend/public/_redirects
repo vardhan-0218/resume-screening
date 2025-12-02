@@ -1,11 +1,6 @@
-# SPA fallback for client-side routing
-/*    /index.html   200
+# Render.com SPA Configuration
+# API routes should go to backend first (higher priority)
+/api/*  https://ai-resume-scout.onrender.com/api/:splat  200!
 
-# API routes should go to backend
-/api/*  https://ai-resume-scout.onrender.com/api/:splat  200
-
-# Specific routes
-/app  /index.html  200
-/results  /index.html  200
-/auth/*  /index.html  200
-/hr/*  /index.html  200
+# All other routes fallback to index.html for SPA routing
+/*      /index.html   200

@@ -17,7 +17,7 @@ class EvidenceBasedATSService:
     """
     
     def __init__(self):
-        """Initialize with skill synonyms and evidence tracking"""
+        """Initialize with skill synonyms, evidence tracking, and result validation"""
         self.skill_synonyms = {
             'javascript': ['js', 'javascript', 'ecmascript', 'node.js', 'nodejs'],
             'python': ['python', 'py', 'python3'],
@@ -33,6 +33,10 @@ class EvidenceBasedATSService:
             'git': ['git', 'github', 'version control'],
         }
         
+        # Result caching for consistency (simple in-memory cache)
+        self._result_cache = {}
+        self._cache_max_size = 100
+        
         # Comprehensive skill keywords for job description parsing
         self.skill_keywords = {
             'programming': ['python', 'java', 'javascript', 'typescript', 'c++', 'c#', 'ruby', 'go', 'rust', 'php', 'swift', 'kotlin'],
@@ -46,7 +50,51 @@ class EvidenceBasedATSService:
             'testing': ['unit testing', 'integration testing', 'selenium', 'jest', 'pytest', 'testing'],
             'other': ['api', 'rest', 'graphql', 'microservices', 'blockchain', 'security']
         }
-        logger.info("✅ Evidence-Based ATS Service initialized")
+        logger.info("✅ Evidence-Based ATS Service initialized with result validation")
+    
+    def _generate_cache_key(self, resume_text: str, job_description: str) -> str:
+        """Generate a cache key based on resume and job description content"""
+        import hashlib
+        combined_text = f"{resume_text[:500]}|||{job_description[:500]}"
+        return hashlib.md5(combined_text.encode()).hexdigest()
+    
+    def _validate_result_consistency(self, result: ATSResult) -> bool:
+        """Validate that ATS result has consistent scoring and data"""
+        try:
+            # Check that score breakdown components add up correctly
+            expected_score = round(
+                result.score_breakdown.skill_match_score * 0.40 +
+                result.score_breakdown.experience_score * 0.25 +
+                result.score_breakdown.role_fit_score * 0.15 +
+                result.score_breakdown.education_match_score * 0.10 +
+                result.score_breakdown.certifications_score * 0.05 +
+                ((result.score_breakdown.tech_stack_match_score + result.score_breakdown.keyword_match_score) / 2) * 0.05,
+                2
+            )
+            
+            # Allow small floating point differences
+            score_diff = abs(result.ats_score - expected_score)
+            if score_diff > 0.1:
+                logger.warning(f"⚠️ Score inconsistency detected: expected {expected_score}, got {result.ats_score}")
+                return False
+            
+            # Validate status matches score thresholds
+            if result.ats_score >= 80 and result.status != "SHORTLISTED":
+                logger.warning(f"⚠️ Status inconsistency: score {result.ats_score}% should be SHORTLISTED but got {result.status}")
+                return False
+            elif 50 <= result.ats_score < 80 and result.status != "BORDERLINE - NEEDS IMPROVEMENT":
+                logger.warning(f"⚠️ Status inconsistency: score {result.ats_score}% should be BORDERLINE but got {result.status}")
+                return False
+            elif result.ats_score < 50 and result.status != "NOT SHORTLISTED":
+                logger.warning(f"⚠️ Status inconsistency: score {result.ats_score}% should be NOT SHORTLISTED but got {result.status}")
+                return False
+            
+            logger.info(f"✅ Result validation passed: {result.ats_score}% - {result.status}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"💥 Error validating result consistency: {str(e)}")
+            return False
     
     async def _extract_job_profile(self, job_description_text: str) -> Dict:
         """Extract job profile information from job description text"""
@@ -206,6 +254,17 @@ class EvidenceBasedATSService:
         Returns deterministic, real-time results with evidence for every claim.
         """
         try:
+            # Check cache for consistent results (optional optimization)
+            cache_key = self._generate_cache_key(resume_text, job_description)
+            if cache_key in self._result_cache:
+                logger.info("🚀 Using cached ATS result for consistency")
+                cached_result = self._result_cache[cache_key]
+                if self._validate_result_consistency(cached_result):
+                    return cached_result
+                else:
+                    # Remove invalid cached result
+                    del self._result_cache[cache_key]
+            
             logger.info("🔍 EVIDENCE-BASED ATS EVALUATION - USER'S EXACT SYSTEM")
             
             # 1) Resume Parsing: extract with evidence (no hallucinations)
@@ -305,6 +364,20 @@ class EvidenceBasedATSService:
                 keywords_to_add=keywords_to_add,
                 final_recommendation=self._generate_final_recommendation(ats_score, status)
             )
+            
+            # Validate result consistency before returning
+            if not self._validate_result_consistency(result):
+                logger.error("❌ Result validation failed - inconsistent scoring detected")
+                raise Exception("Result validation failed - inconsistent ATS scoring")
+            
+            # Cache the validated result for consistency (with size limit)
+            if len(self._result_cache) >= self._cache_max_size:
+                # Remove oldest entry (simple FIFO)
+                oldest_key = next(iter(self._result_cache))
+                del self._result_cache[oldest_key]
+            
+            self._result_cache[cache_key] = result
+            logger.info(f"💾 Result cached for consistency validation")
             
             return result
             

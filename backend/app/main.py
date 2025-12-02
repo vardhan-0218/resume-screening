@@ -433,36 +433,53 @@ async def ats_evaluate_resume(
     ats_service: EvidenceBasedATSService = Depends(get_ats_service)
 ):
     """Comprehensive ATS evaluation of a single resume against job description."""
+    start_time = datetime.now()
+    logger.info(f"🚀 ATS evaluation started for file: {file.filename}")
+    
     try:
         if not job_description:
+            logger.warning("❌ Job description missing")
             raise HTTPException(status_code=400, detail="Job description is required for ATS evaluation")
         
         # Validate file
         if not file.filename:
+            logger.warning("❌ No filename provided")
             raise HTTPException(status_code=400, detail="No filename provided")
             
         file_extension = os.path.splitext(file.filename.lower())[1]
         allowed_extensions = ['.pdf', '.doc', '.docx', '.txt']
         
         if file_extension not in allowed_extensions:
+            logger.warning(f"❌ Unsupported file format: {file.filename}")
             raise HTTPException(status_code=400, detail=f"Unsupported file format. Please upload PDF, DOC, DOCX, or TXT files.")
+        
+        logger.info(f"📄 Processing file: {file.filename} ({file_extension})")
         
         # Read and extract text from resume
         file_content = await file.read()
         resume_text = await text_service.extract_text(file_content, file.filename)
         
         if not resume_text or len(resume_text.strip()) < 100:
+            logger.warning(f"❌ Insufficient text extracted from {file.filename}: {len(resume_text.strip()) if resume_text else 0} chars")
             raise HTTPException(status_code=400, detail="Could not extract meaningful text from resume")
+        
+        logger.info(f"✅ Text extracted: {len(resume_text)} characters")
         
         # Perform comprehensive ATS evaluation
         ats_result = await ats_service.evaluate_candidate(resume_text, job_description)
         
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"🎯 ATS evaluation completed for {file.filename}: {ats_result.ats_score}% ({ats_result.status}) in {processing_time:.2f}s")
+        
         return ats_result
         
     except HTTPException:
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.error(f"❌ HTTP error in ATS evaluation for {file.filename} after {processing_time:.2f}s")
         raise
     except Exception as e:
-        logger.error(f"Error in ATS evaluation: {str(e)}")
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.error(f"💥 Unexpected error in ATS evaluation for {file.filename} after {processing_time:.2f}s: {str(e)}")
         raise HTTPException(status_code=500, detail=f"ATS evaluation failed: {str(e)}")
 
 @app.options("/api/ats/batch-evaluate")
@@ -478,30 +495,40 @@ async def ats_batch_evaluate(
     ats_service: EvidenceBasedATSService = Depends(get_ats_service)
 ):
     """Batch ATS evaluation of multiple resumes against a job description."""
+    start_time = datetime.now()
+    logger.info(f"🚀 Batch ATS evaluation started for {len(files)} files")
+    
     try:
         if not job_description:
+            logger.warning("❌ Job description missing for batch evaluation")
             raise HTTPException(status_code=400, detail="Job description is required for batch ATS evaluation")
         
         if not files:
+            logger.warning("❌ No files provided for batch evaluation")
             raise HTTPException(status_code=400, detail="At least one resume file is required")
             
         if len(files) > 20:  # Limit batch size
+            logger.warning(f"❌ Too many files: {len(files)} (max 20)")
             raise HTTPException(status_code=400, detail="Maximum 20 files allowed per batch")
         
         results = []
+        successful_files = 0
+        skipped_files = 0
         
         for file in files:
             try:
                 # Validate file
                 if not file.filename:
-                    logger.warning(f"Skipping file with no filename")
+                    logger.warning(f"⚠️ Skipping file with no filename")
+                    skipped_files += 1
                     continue
                     
                 file_extension = os.path.splitext(file.filename.lower())[1]
                 allowed_extensions = ['.pdf', '.doc', '.docx', '.txt']
                 
                 if file_extension not in allowed_extensions:
-                    logger.warning(f"Skipping unsupported file: {file.filename}")
+                    logger.warning(f"⚠️ Skipping unsupported file: {file.filename}")
+                    skipped_files += 1
                     continue
                 
                 # Extract text
@@ -509,15 +536,22 @@ async def ats_batch_evaluate(
                 resume_text = await text_service.extract_text(file_content, file.filename)
                 
                 if not resume_text or len(resume_text.strip()) < 100:
-                    logger.warning(f"Skipping file with insufficient content: {file.filename}")
+                    logger.warning(f"⚠️ Skipping file with insufficient content: {file.filename} ({len(resume_text.strip()) if resume_text else 0} chars)")
+                    skipped_files += 1
                     continue
+                
+                logger.info(f"📄 Processing {file.filename}: {len(resume_text)} characters")
                 
                 # Perform ATS evaluation
                 ats_result = await ats_service.evaluate_candidate(resume_text, job_description)
                 results.append(ats_result)
+                successful_files += 1
+                
+                logger.info(f"✅ {file.filename}: {ats_result.ats_score}% ({ats_result.status})")
                 
             except Exception as e:
-                logger.error(f"Error processing file {file.filename}: {str(e)}")
+                logger.error(f"💥 Error processing file {file.filename}: {str(e)}")
+                skipped_files += 1
                 continue
         
         # Sort by ATS score (highest first)
@@ -530,12 +564,18 @@ async def ats_batch_evaluate(
             contact_info['rank'] = str(i + 1)
             result.candidate_profile.contact_information = contact_info
         
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"🎯 Batch evaluation completed: {successful_files} successful, {skipped_files} skipped in {processing_time:.2f}s")
+        
         return results
         
     except HTTPException:
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.error(f"❌ HTTP error in batch evaluation after {processing_time:.2f}s")
         raise
     except Exception as e:
-        logger.error(f"Error in batch ATS evaluation: {str(e)}")
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.error(f"💥 Unexpected error in batch ATS evaluation after {processing_time:.2f}s: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Batch ATS evaluation failed: {str(e)}")
 
 class JobDescriptionRequest(BaseModel):
@@ -573,6 +613,65 @@ async def analyze_job_description(
     except Exception as e:
         logger.error(f"Error analyzing job description: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Job description analysis failed: {str(e)}")
+
+@app.post("/api/ats/validate-consistency")
+async def validate_ats_consistency(
+    file: UploadFile = File(...),
+    job_description: str = Form(..., description="Job description for consistency validation"),
+    text_service: TextExtractionService = Depends(get_text_service),
+    ats_service: EvidenceBasedATSService = Depends(get_ats_service)
+):
+    """Validate that the same resume gets identical results when processed multiple times."""
+    try:
+        logger.info(f"🔬 Starting ATS consistency validation for {file.filename}")
+        
+        # Extract text once
+        file_content = await file.read()
+        resume_text = await text_service.extract_text(file_content, file.filename)
+        
+        if not resume_text or len(resume_text.strip()) < 100:
+            raise HTTPException(status_code=400, detail="Could not extract meaningful text from resume")
+        
+        # Run evaluation multiple times to check consistency
+        results = []
+        for i in range(3):
+            result = await ats_service.evaluate_candidate(resume_text, job_description)
+            results.append({
+                "run": i + 1,
+                "ats_score": result.ats_score,
+                "status": result.status,
+                "skill_match_score": result.score_breakdown.skill_match_score,
+                "experience_score": result.score_breakdown.experience_score,
+                "matched_skills_count": len(result.score_breakdown.matched_skills),
+                "missing_skills_count": len(result.score_breakdown.missing_skills)
+            })
+        
+        # Check consistency
+        first_result = results[0]
+        is_consistent = all(
+            r["ats_score"] == first_result["ats_score"] and
+            r["status"] == first_result["status"] and
+            r["skill_match_score"] == first_result["skill_match_score"] and
+            r["experience_score"] == first_result["experience_score"]
+            for r in results[1:]
+        )
+        
+        logger.info(f"🎯 Consistency validation completed: {'✅ CONSISTENT' if is_consistent else '❌ INCONSISTENT'}")
+        
+        return {
+            "filename": file.filename,
+            "is_consistent": is_consistent,
+            "results": results,
+            "validation_summary": {
+                "ats_score_range": [min(r["ats_score"] for r in results), max(r["ats_score"] for r in results)],
+                "status_consistent": len(set(r["status"] for r in results)) == 1,
+                "skills_consistent": len(set(r["matched_skills_count"] for r in results)) == 1
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"💥 Error in consistency validation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Consistency validation failed: {str(e)}")
 
 @app.post("/api/ats/analyze-job-description-file")
 async def analyze_job_description_file(
