@@ -1,0 +1,18 @@
+{
+  "id": "5ceda9aa-b0f2-4e1d-846f-524e90d645d7",
+  "filename": "test_projects_debug.txt",
+  "extracted_text": "Test User Software Developer Email: test@example.com SKILLS: Python, JavaScript, HTML EDUCATION: Computer Science Degree EXPERIENCE: 2 years of software development PROJECTS: Project One - web application Project Two - mobile app Project Three - data analysis tool",
+  "skills": [
+    "Python",
+    "Javascript",
+    "Html"
+  ],
+  "experience_years": 2,
+  "education": [
+    "Computer Science"
+  ],
+  "projects": [],
+  "email": "test@example.com",
+  "similarity_score": 0.6780376136302948,
+  "timestamp": "2025-11-28 17:03:42.783610"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "3d79c1fb-4258-4769-b3f1-a5ea4497cabc",
+  "filename": "test_resume.txt",
+  "extracted_text": "John Doe Senior Software Developer Experience: - 5+ years of experience in full-stack development - Expert in React, Node.js, Python, and JavaScript - Experience with AWS, Docker, and Kubernetes - Led a team of 5 developers on multiple projects - Built scalable web applications serving 10k+ users Skills: - Programming: Python, JavaScript, TypeScript, Java - Frontend: React, Vue.js, HTML5, CSS3 - Backend: Node.js, Express, Django, FastAPI - Databases: PostgreSQL, MongoDB, Redis - Cloud: AWS, Google Cloud, Docker, Kubernetes - Tools: Git, Jenkins, JIRA, Agile methodologies Education: - Bachelor of Computer Science, MIT (2018) - AWS Certified Solutions Architect (2021) Projects: - E-commerce platform with microservices architecture - Real-time chat application with WebSocket - AI-powered recommendation system",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Typescript",
+    "Vue",
+    "Docker",
+    "Kubernetes",
+    "Aws",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Redis",
+    "Git",
+    "Html",
+    "Css",
+    "Jenkins",
+    "Api",
+    "Microservices",
+    "Ai"
+  ],
+  "experience_years": 5,
+  "education": [
+    "Bachelor",
+    "Computer Science"
+  ],
+  "email": null,
+  "similarity_score": null,
+  "timestamp": "2025-11-28 14:09:44.418689"
+}

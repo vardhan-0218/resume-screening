@@ -1,0 +1,14 @@
+{
+  "id": "6bce9887-d189-472f-af2c-3af77d6eabf3",
+  "filename": "test_invalid_file.txt",
+  "extracted_text": "This is not a resume file. It contains random text without any professional information. No skills, no experience, no education details. Just random content that should be detected as invalid.",
+  "skills": [
+    "Ai"
+  ],
+  "experience_years": null,
+  "education": [],
+  "projects": [],
+  "email": null,
+  "similarity_score": null,
+  "timestamp": "2025-11-28 16:26:13.573919"
+}

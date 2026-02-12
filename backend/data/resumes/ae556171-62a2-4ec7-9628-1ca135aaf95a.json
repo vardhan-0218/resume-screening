@@ -1,0 +1,31 @@
+{
+  "id": "ae556171-62a2-4ec7-9628-1ca135aaf95a",
+  "filename": "Shravani_resume.docx",
+  "extracted_text": "Shravani G B shravanigb580@gmail.com Gauribidanur, Chickballapur +91-8431510059 -561208 www.linkedin.com/in/shravani-gb https://github.com/Shravi-13 PROFESSIONAL SUMMARY As a third-year Information Science and Engineering student at SJCIT College, Chickballapur, I have developed a robust foundation in key technical domains, like Software development methodologies, AI-driven solutions, and RESTful APIs. Deep interest in advanced technological areas such as: Web development, Artificial intelligence, Data analytics hands experience working with, C, Java, Python, SQL, HTML, PowerBI, Tableau Enthusiastic about collaborating with professional teams, contributing to innovative projects, and gaining insights into industry best practices to further enhance my technical expertise. PROJECTS Development of chatbot using AI for mental health assistance. Jul 2024 Engineered a scalable backend using Python (Flask/Django), JavaScript (Node.js) paired with an interactive React.js, HTML/CSS, Tailwind CSS frontend. Designed and configured a PostgreSQL, Firebase, MongoDB database capable of handling Huge Data, maintaining high availability. EDUCATION TECHNICAL SKILLS Programming Languages: C,DSA,Java, Python, SQL, HTML, CSS Frameworks and Tools: Git, PowerBI , tableau, AWS, VScode. Databases: PostgreSQL, MongoDB Specialized Competencies: RESTful APIs, Scalable Web Development, Distributed Systems. SOFT SKILLS Exceptional teamwork and cross-functional collaboration Analytical thinking and creative problem-solving Proficient in Agile and Scrum methodologies Adaptable and detail-oriented DECLARATION I hereby declare that the above information is true to the best of my knowledge and belief. Degree Specialization Institute Year CGPA B.E. Information science and Engineering SJC Institute of 2025\u2013Present 9.11 Technology HSC Physics, Chemistry, Mathematics B.G.S PU College 2022 82.67% & Biology SSC - Sri Ramakrishna Sharadadevi Vidya Mandira 2020 83.2%",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Aws",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Git",
+    "Html",
+    "Css",
+    "Api",
+    "Rest",
+    "Ai",
+    "Flask",
+    "Django",
+    "Scala"
+  ],
+  "experience_years": null,
+  "education": [
+    "Engineering"
+  ],
+  "email": "shravanigb580@gmail.com",
+  "similarity_score": 0.849050760269165,
+  "timestamp": "2025-11-28 15:57:45.348222"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "70c2bba6-079c-41ad-a76c-ce7e7525a3d7",
+  "filename": "hr_test_resume.txt",
+  "extracted_text": "Sarah Johnson Senior Full Stack Developer sarah.johnson@techcorp.com +1 (555) 123-4567 LinkedIn: linkedin.com/in/sarahjohnson PROFESSIONAL SUMMARY Experienced Full Stack Developer with 7+ years of expertise in modern web technologies. TECHNICAL SKILLS \u0095 Programming Languages: Python, JavaScript, TypeScript, Java \u0095 Frontend: React, Vue.js, Angular, HTML5, CSS3, SASS \u0095 Backend: Node.js, Express, Django, FastAPI, Spring Boot \u0095 Databases: PostgreSQL, MySQL, MongoDB, Redis \u0095 Cloud: AWS, Azure, Docker, Kubernetes \u0095 Tools: Git, Jenkins, JIRA, Agile/Scrum PROFESSIONAL EXPERIENCE Senior Full Stack Developer | TechCorp Inc. | 2020 - Present \u0095 Led development of microservices architecture serving 50k+ users \u0095 Built React applications with 95% test coverage \u0095 Optimized database queries improving performance by 40% EDUCATION Bachelor of Science in Computer Science Stanford University | 2017",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Typescript",
+    "Angular",
+    "Vue",
+    "Docker",
+    "Kubernetes",
+    "Aws",
+    "Azure",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Mysql",
+    "Redis",
+    "Git",
+    "Html",
+    "Css",
+    "Sass"
+  ],
+  "experience_years": 7,
+  "education": [
+    "Bachelor",
+    "Computer Science"
+  ],
+  "email": "sarah.johnson@techcorp.com",
+  "similarity_score": 0.7596157193183899,
+  "timestamp": "2025-11-28 14:13:19.134429"
+}

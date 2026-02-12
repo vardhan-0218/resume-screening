@@ -1,0 +1,33 @@
+{
+  "id": "e55f639e-959a-4ad7-a51c-d2e7a526626d",
+  "filename": "Mohan resume.pdf",
+  "extracted_text": "Kuruba Mohan manumohan8977@gmail.com SoftwareDevelopmentEngineer +91-8977274297 Bengaluru,Karnataka linkedin.com/in/kuruba-mohan PROFESSIONALSUMMARY \u2022 Versatile Software Development Engineer adept at creating scalable, high-performance applica- tions,AI-drivensolutions,andRESTfulAPIs. \u2022 Proficient in Java, Python, SQL, and React.js, with experience in microservices architectures, cloudplatforms,anddatabasetuning. \u2022 DeliveredprojectsaheadofdeadlinesusingAgilemethodologies,boostingefficiencyby40%. \u2022 ExperiencedindeployingDockerizedmicroservicesandrefiningAPIresponsetimesforenterprise- gradesystems. WORKEXPERIENCE \u2022 FullStackWebDevelopmentIntern [VarconsTechnologiesPvt. Ltd] May\u2013Jun2024 \u25e6 Developed and launched 5 interactive web pages using React.js and Node.js, enhancing teamproductivityby25%. \u25e6 Designed a robust PostgreSQL database schema for 10,000+ records, achieving a 30% im- provementinqueryefficiency. \u25e6 ImprovedUI/UXthroughadvancedCSSmethodsandreusableReactcomponents,reducing loadtimesby30%. \u25e6 Supervised a team of 4 developers within a Scrum framework, meeting deadlines 2 weeks early. \u25e6 Deployed microservices using Docker and Kubernetes, ensuring seamless performance un- derheavyload. PROJECTS \u2022 KaryaNova: AI-PoweredEmploymentPlatform Jul2024\u2013Present \u25e6 EngineeredascalablebackendusingNode.jsandExpress.js,pairedwithaninteractiveRe- act.jsfrontend,increasinguseractivityby25%. \u25e6 Designed and configured a PostgreSQL database capable of handling 10,000+ job listings anduserprofiles,maintaininghighavailability. \u25e6 Created real-time collaboration tools for 500+ active users, improving remote productivity by30%. \u2022 CampusConnect: Telegram-BasedChatbotforStudentLifeManagement Jan\u2013May2024 \u25e6 BuiltaTelegramchatbotleveragingPython,PostgreSQL,andtheTelegramBotAPItosup- port1,000+studentprofiles. \u25e6 Automated report generation with ReportLab, providing customized PDF academic sum- maries. \u25e6 Devised a reminder system using APScheduler, boosting compliance with academic dead- linesby40%. EDUCATION Degree Specialization Institute Year CGPA B.E. ComputerScience&Engineering SaiVidyaInstituteof 2021\u2013Present 8.63 Technology HSC Physics, Chemistry, & Mathemat- Sri Chaitanya Junior 2021 88.2% ics College SSC - ZPHSchool 2019 9.7 TECHNICALSKILLS \u2022 ProgrammingLanguages: Java,Python,JavaScript,SQL,HTML,CSS \u2022 FrameworksandTools: React.js,Node.js,Express.js,Docker,Git \u2022 Databases: PostgreSQL,MongoDB \u2022 SpecializedCompetencies: RESTfulAPIs,ScalableWebDevelopment,DistributedSystems,AI/ML (TensorFlow,Scikit-learn) SOFTSKILLS \u2022 Exceptionalteamworkandcross-functionalcollaboration \u2022 Analyticalthinkingandcreativeproblem-solving \u2022 ProficientinAgileandScrummethodologies \u2022 Adaptableanddetail-oriented CERTIFICATIONS \u2022 FullStackWebDevelopmentCertification\u2013Udemy(2024) \u2022 SQLCertification\u2013Qspiders(2023) \u2022 JavaProgrammingCertification\u2013Qspiders(2022) ACHIEVEMENTS \u2022 Delivered a cloud-hosted project 2 weeks early, surpassing client expectations during an intern- ship. \u2022 Graduatedinthetop15%oftheclasswithaCGPAof8.63. \u2022 EnhancedAPIresponsetimesforenterprisesystemsby40%throughinnovativetechniques.",
+  "skills": [
+    "Python",
+    "Java",
+    "Javascript",
+    "React",
+    "Docker",
+    "Kubernetes",
+    "Sql",
+    "Mongodb",
+    "Postgresql",
+    "Git",
+    "Html",
+    "Css",
+    "Api",
+    "Rest",
+    "Microservices",
+    "Ai",
+    "Tensorflow",
+    "Scala"
+  ],
+  "experience_years": null,
+  "education": [
+    "Engineering"
+  ],
+  "projects": [],
+  "email": "manumohan8977@gmail.com",
+  "similarity_score": 0.8499556481838226,
+  "timestamp": "2025-11-28 16:50:32.934391"
+}
